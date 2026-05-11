@@ -20,9 +20,13 @@ export class UserPopupComponent implements OnInit {
     }
 
     async onSave() {
+        console.log("Save button clicked");
+        console.log("user: ", localStorage.getItem('nickUsuario'));
+        console.log("password: ", localStorage.getItem('contrasena'));
         this.cerrarPopUpOk.emit();
     }
     onCancel() {
+        console.log("Cancel button clicked");
         this.cerrarPopUpCancel.emit();
 
     }

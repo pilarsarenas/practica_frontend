@@ -1,24 +1,34 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import to from "./utils.service";
+import ConstUrls from 'src/app/shared/contants/const-urls';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class LoginService {
 
-  private apiUrl =
-    'http://localhost:8080/api/v1/usuarios/login';
+  paramNickUsuario: string = ConstUrls.NICK_USUARIO_PARAM;
+  paramContrasena: string = ConstUrls.PASS_USUARIO_PARAM;
+  apiUrl: string = ConstUrls.API_URL;
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string) {
+async iniciarSesion(nickUsuario: string, contrasena: string) {
+  const body = {
+    nickUsuario,
+    contrasena
+  };
 
-    return this.http.post<boolean>(
-      this.apiUrl,
-      {
-        nickUsuario: username,
-        contrasena: password
-      }
-    );
-  }
+  return await to(
+    this.http
+      .post<any>(
+        `${this.apiUrl}/login`,
+        body
+      )
+      .toPromise()
+  );
+}
+
 }
