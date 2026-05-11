@@ -6,6 +6,26 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: inline-block;
+  width: 90px;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.form-group input {
+  width: 160px;
+}
+
+button {
+  margin-top: 10px;
+}
+
 .errorClass {
   color: red;
   margin-top: 1em;
