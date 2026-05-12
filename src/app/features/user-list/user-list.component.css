@@ -1,146 +1,152 @@
-.user-list-container {
-  max-width: 600px;
-  margin: 30px auto;
-}
-.dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-.dialog-box {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 2rem;
-  z-index: 1000;
-  border-radius: 8px;
-  min-width: 500px;
-}
-.errorClass {
-  color: red;
-  margin-top: 1em;
-}
-
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fff;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f7f9;
+  color: #333;
 }
 
+.user-list-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
+}
+
+.header h2 {
+  color: #000000;
+  margin: 0;
+  font-size: 24px;
+}
+
+.logout-btn {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #222;
+}
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  align-items: center;
+}
+
+.main-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #3c8bcb;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.main-button:hover:not(:disabled) {
+  background-color: #2e6da4;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background-color: #d9534f;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background-color: #c9302c;
+}
+
+.trash-icon {
+  width: 18px; 
+  height: 18px;
+  object-fit: contain;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.table-container {
+  max-height: 450px; 
+  overflow-y: scroll;  
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
 
 table {
   width: 100%;
-}
-
-table, th, tr, td {
   border-collapse: collapse;
-  border: 1px solid #ad6f72;
+  background: white;
 }
 
 th {
-  text-align: center;
   background-color: #e51400;
-  font-weight: 600;
-  color: #fff;
-  padding: .3rem;
+  color: white;
+  padding: 14px;
+  text-align: center;
+  font-size: 13px;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 td {
+  padding: 12px;
   text-align: center;
-  color: #000;
-  padding: .3rem;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
 }
 
-tr:nth-child(even) {background-color: #f7cecc;}
 
-.container-button {
-  display: flex; /* alinear horizontalmente */
-  gap: 10px;
-  margin-bottom: .8rem;
+tr:nth-child(even) {
+  background-color: #f7cecc;
 }
 
-.main-button, .main-button-icon {
-  width: auto;
-  height: 40px;
-  padding: .4rem .6rem;
-  border: none;
-  background-color: #3c8bcb;
-  cursor: pointer;
-  border-radius: .2rem;
-  color: #fff;
+tr:hover {
+  background-color: #cfcfcf;
 }
 
-.default-btn {
-  background-color: #fefefe;
-  color: #000;
-  border: 1px solid #e5e5e5;
-}
-
-.img-icon {
-  height: 100%;
-  width: auto;
-}
-
-.container-button-right {
-  padding: 1rem 0rem;
-  float: right;
-}
-
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding-bottom: .5rem;
-}
-
-.form-column {
-  flex: 1;
-  min-width: 200px;
-}
-
-.form-column label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.form-column .form-control {
-  width: 100%;
-  padding: 6px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.form-control-table {
-  width: 95%;
-  float: left;
-}
-
-.form-control-table:focus{
-  outline: none;
-}
-
-.form-control:focus{
-  outline: solid 1px #ccc;
-}
-
-input,textarea, select {
-  width: 100%;
-  font: inherit;
-  padding: 0.15rem 0.25rem;
-  border-radius: 4px;
-  border: 1px solid #dddddd;
-  background-color: #fff;
+.address-column {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .img-gender {
-  max-height: 25px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+input[type="radio"] {
+  accent-color: #e51400; 
+  transform: scale(1.2);
 }
