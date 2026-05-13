@@ -35,7 +35,6 @@
         </button>
     </div>
 
-    <!-- Contenedor con Scroll Vertical -->
     <div class="table-container">
         <table>
             <thead>
@@ -89,11 +88,17 @@
                         </td>
 
                         <td
-                            class="address-column"
-                            [title]="obtenerDireccionCompleta(usuario)"
-                        >
-                           {{ obtenerDireccionCorta(usuario) }}
-                        </td>
+    class="address-column"
+    [title]="obtenerDireccionCompleta(usuario)"
+>
+    {{ obtenerDireccionCorta(usuario) }}
+
+    @if (obtenerContadorDireccionesExtra(usuario) > 0) {
+        <span class="extra-addresses">
+            +{{ obtenerContadorDireccionesExtra(usuario) }}
+        </span>
+    }
+</td>
                     </tr>
                 }
             </tbody>

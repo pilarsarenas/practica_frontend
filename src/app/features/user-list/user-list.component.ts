@@ -32,31 +32,53 @@ export class UserListComponent implements OnInit {
   }
 
   async cargarUsuarios() {
-    const nickUsuario = localStorage.getItem('nickUsuario') || '';
-    const contrasena = localStorage.getItem('contrasena') || '';
 
-    const resultado = await this.userService.obtenerUsuarios(nickUsuario, contrasena);
+  const nickUsuario = localStorage.getItem('nickUsuario') || '';
+  const contrasena = localStorage.getItem('contrasena') || '';
 
-    let usuarios: any[] = [];
+  const resultado =
+    await this.userService.obtenerUsuarios(
+      nickUsuario,
+      contrasena
+    );
 
-    if (Array.isArray(resultado)) {
-      usuarios = resultado;
-    } else {
-      const [data, error] = resultado as any;
-      if (error) {
-        console.error('Error detallado:', error);
-        return;
-      }
-      usuarios = data || [];
+  let usuarios: any[] = [];
+
+  if (Array.isArray(resultado)) {
+
+    usuarios = resultado;
+
+  } else {
+
+    const [data, error] = resultado as any;
+
+    if (error) {
+      console.error('Error usuarios:', error);
+      return;
     }
 
-    for (const usuario of usuarios) {
+    usuarios = data || [];
+  }
+
+  for (const usuario of usuarios) {
+
+    const resultadoDirecciones =
+      await this.userService.obtenerDireccionesPorUsuario(
+        usuario.id,
+        nickUsuario,
+        contrasena
+      );
+
+    console.log('RESULTADO DIRECCIONES', resultadoDirecciones);
+
+    if (Array.isArray(resultadoDirecciones)) {
+
+      usuario.direcciones = resultadoDirecciones;
+
+    } else {
+
       const [direcciones, errorDir] =
-        await this.userService.obtenerDireccionesPorUsuario(
-          usuario.id,
-          nickUsuario,
-          contrasena
-        );
+        resultadoDirecciones as any;
 
       if (!errorDir) {
         usuario.direcciones = direcciones || [];
@@ -64,14 +86,16 @@ export class UserListComponent implements OnInit {
         usuario.direcciones = [];
       }
     }
-
-    this.usuarios = usuarios;
-
-    if (this.usuarios.length > 0) {
-      this.usuarioSeleccionado = this.usuarios[0];
-    }
   }
 
+  console.log('USUARIOS FINALES', usuarios);
+
+  this.usuarios = usuarios;
+
+  if (this.usuarios.length > 0) {
+    this.usuarioSeleccionado = this.usuarios[0];
+  }
+}
   logout(): void {
     localStorage.removeItem('nickUsuario');
     localStorage.removeItem('contrasena');
@@ -139,29 +163,50 @@ export class UserListComponent implements OnInit {
   }
 
   obtenerDireccionCompleta(usuario: any): string {
+
   const principal = usuario.direcciones?.find((d: any) =>
-    d.direccionPrincipal == 1
+    d.direccionPrincipal === true ||
+    d.direccionPrincipal === 1
   );
 
-  if (!principal) return 'Sin dirección';
+  if (!principal) {
+    return 'Sin dirección';
+  }
 
   const calle = principal.nombreCalle || '';
-  const numero = principal.numeroCalle ? `, ${principal.numeroCalle}` : '';
+  const numero = principal.numeroCalle
+    ? `, ${principal.numeroCalle}`
+    : '';
 
   return `${calle}${numero}`;
 }
-   
-  obtenerDireccionCorta(usuario: any): string {
-    const direccion = this.obtenerDireccionCompleta(usuario);
-    const MAX_LENGTH = 25;
 
-    return direccion.length > MAX_LENGTH
-      ? direccion.substring(0, MAX_LENGTH) + '...'
-      : direccion;
+obtenerDireccionCorta(usuario: any): string {
+
+  const direccion = this.obtenerDireccionCompleta(usuario);
+
+  const MAX_LENGTH = 25;
+
+  return direccion.length > MAX_LENGTH
+    ? direccion.substring(0, MAX_LENGTH) + '...'
+    : direccion;
+}
+
+obtenerContadorDireccionesExtra(usuario: any): number {
+
+  if (!usuario.direcciones || usuario.direcciones.length === 0) {
+    return 0;
   }
 
-  obtenerContadorDireccionesExtra(usuario: any): number {
-    if (!usuario.direcciones) return 0;
-    return Math.max(0, usuario.direcciones.length - 1);
+  const principal = usuario.direcciones.find((d: any) =>
+    d.direccionPrincipal === true ||
+    d.direccionPrincipal === 1
+  );
+
+  if (!principal) {
+    return usuario.direcciones.length;
   }
+
+  return usuario.direcciones.length - 1;
+}
 }

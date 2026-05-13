@@ -140,6 +140,16 @@ tr:hover {
   text-overflow: ellipsis;
 }
 
+.extra-addresses {
+  margin-left: 6px;
+  background-color: #e51400;
+  color: white;
+  border-radius: 12px;
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 .img-gender {
   width: 20px;
   height: 20px;
