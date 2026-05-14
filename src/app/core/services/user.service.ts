@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { Usuario } from '../models/user.model';
 import to from './utils.service';
 
@@ -13,58 +12,125 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+
   async obtenerUsuarios(nickUsuario: string, nickContrasena: string) {
     return await to(
-      this.http
-        .get<Usuario[]>(
-          `${this.apiUrl}/usuarios?nickUsuario=${nickUsuario}&nickContrasena=${nickContrasena}`
-        )
-        .toPromise()
+      this.http.get<Usuario[]>(`${this.apiUrl}/usuarios`, {
+        params: { nickUsuario, nickContrasena }
+      }).toPromise()
     );
   }
 
-  async eliminarUsuario(id: number, nickUsuario: string, nickContrasena: string) {
+  async obtenerUsuarioPorId(id: number, nickUsuario: string, nickContrasena: string) {
     return await to(
-      this.http
-        .delete(
-          `${this.apiUrl}/usuarios/${id}?nickUsuario=${nickUsuario}&nickContrasena=${nickContrasena}`
-        )
-        .toPromise()
+      this.http.get<Usuario>(`${this.apiUrl}/usuarios/${id}`, {
+        params: { nickUsuario, nickContrasena }
+      }).toPromise()
     );
   }
 
   async crearUsuario(usuario: Usuario, nickUsuario: string, nickContrasena: string) {
     return await to(
-      this.http
-        .post<Usuario>(
-          `${this.apiUrl}/usuarios?nickUsuario=${nickUsuario}&nickContrasena=${nickContrasena}`,
-          usuario
-        )
-        .toPromise()
+      this.http.post<Usuario>(`${this.apiUrl}/usuarios`, usuario, {
+        params: { nickUsuario, nickContrasena }
+      }).toPromise()
     );
   }
 
   async actualizarUsuario(id: number, usuario: Usuario, nickUsuario: string, nickContrasena: string) {
     return await to(
-      this.http
-        .put<Usuario>(
-          `${this.apiUrl}/usuarios/${id}?nickUsuario=${nickUsuario}&nickContrasena=${nickContrasena}`,
-          usuario
-        )
-        .toPromise()
+      this.http.put<Usuario>(`${this.apiUrl}/usuarios/${id}`, usuario, {
+        params: { nickUsuario, nickContrasena }
+      }).toPromise()
     );
   }
+
+  async eliminarUsuario(id: number, nickUsuario: string, nickContrasena: string) {
+    return await to(
+      this.http.delete(`${this.apiUrl}/usuarios/${id}`, {
+        params: { nickUsuario, nickContrasena }
+      }).toPromise()
+    );
+  }
+
+
   async obtenerDireccionesPorUsuario(
-  usuarioId: number,
-  nickUsuario: string,
-  nickContrasena: string
-) {
+    usuarioId: number,
+    nickUsuario: string,
+    nickContrasena: string
+  ) {
+    return await to(
+      this.http.get<any[]>(
+        `${this.apiUrl}/direcciones/usuario/${usuarioId}`,
+        {
+          params: { nickUsuario, nickContrasena }
+        }
+      ).toPromise()
+    );
+  }
+
+  async crearDireccion(
+    direccion: any,
+    nickUsuario: string,
+    nickContrasena: string
+  ) {
+    return await to(
+      this.http.post(
+        `${this.apiUrl}/direcciones`,
+        direccion,
+        {
+          params: { nickUsuario, nickContrasena }
+        }
+      ).toPromise()
+    );
+  }
+
+  async actualizarDireccion(
+    id: number,
+    direccion: any,
+    nickUsuario: string,
+    nickContrasena: string
+  ) {
+    return await to(
+      this.http.put(
+        `${this.apiUrl}/direcciones/${id}`,
+        direccion,
+        {
+          params: { nickUsuario, nickContrasena }
+        }
+      ).toPromise()
+    );
+  }
+
+  async eliminarDireccion(
+    id: number,
+    nickUsuario: string,
+    nickContrasena: string
+  ) {
+    return await to(
+      this.http.delete(
+        `${this.apiUrl}/direcciones/${id}`,
+        {
+          params: { nickUsuario, nickContrasena }
+        }
+      ).toPromise()
+    );
+
+  }
+
+  async obtenerGeneros(nickUsuario: string, nickContrasena: string) {
   return await to(
-    this.http
-      .get<any[]>(
-        `${this.apiUrl}/direcciones/usuario/${usuarioId}?nickUsuario=${nickUsuario}&nickContrasena=${nickContrasena}`
-      )
-      .toPromise()
+    this.http.get<any[]>(`${this.apiUrl}/generos`, {
+      params: { nickUsuario, nickContrasena }
+    }).toPromise()
+  );
+}
+
+async obtenerPuestosDeTrabajo(nickUsuario: string, nickContrasena: string) {
+  return await to(
+    this.http.get<any[]>(`${this.apiUrl}/puestosdetrabajo`, {
+      params: { nickUsuario, nickContrasena }
+    }).toPromise()
   );
 }
 }

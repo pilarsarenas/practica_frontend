@@ -1,138 +1,158 @@
 .dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
 }
+
 .dialog-box {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 2rem;
-    z-index: 1000;
-    border-radius: 8px;
-    min-width: 500px;
-}
-.errorClass {
-    color: red;
-    margin-top: 1em;
-}
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 1100px;
+  background: white;
+  border-radius: 10px;
+  padding: 22px 28px;
+  z-index: 1001;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow: hidden;
 }
 
+.dialog-title h2 {
+  text-align: center;
+  font-size: 22px;
+  color: #555;
+}
 
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px 28px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #777;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field select {
+  height: 42px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 0 12px;
+  font-size: 15px;
+}
+
+.addresses-section {
+  margin-top: 20px;
+}
+
+.addresses-section h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+/* BOTONES */
+.address-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.address-buttons button {
+  background: #3498db;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.address-buttons button:hover {
+  background: #2f89c5;
+}
+
+.table-wrapper {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
 
 table {
-    width: 100%;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-table, th, tr, td {
-    border-collapse: collapse;
-    border: 1px solid #ad6f72;
+thead {
+  background: #e50000;
+  color: white;
+  position: sticky;
+  top: 0;
 }
 
-th {
-    text-align: center;
-    background-color: #e51400;
-    font-weight: 600;
-    color: #fff;
-    padding: .3rem;
+th, td {
+  padding: 10px;
+  border: 1px solid #eee;
+  text-align: center;
+  font-size: 14px;
 }
 
-td {
-    text-align: center;
-    color: #000;
-    padding: .3rem;
+tbody tr:hover {
+  background: #f2f7ff;
 }
 
-tr:nth-child(even) {background-color: #f7cecc;}
-
-.container-button {
-    display: flex; /* alinear horizontalmente */
-    gap: 10px;
-    margin-bottom: .8rem;
+tbody tr:nth-child(even) {
+  background: #fff1f1;
 }
 
-.main-button, .main-button-icon {
-    width: auto;
-    height: 40px;
-    padding: .4rem .6rem;
-    border: none;
-    background-color: #3c8bcb;
-    cursor: pointer;
-    border-radius: .2rem;
-    color: #fff;
+input[type="radio"] {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
-.default-btn {
-    background-color: #fefefe;
-    color: #000;
-    border: 1px solid #e5e5e5;
+.footer-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
 }
 
-.img-icon {
-    height: 100%;
-    width: auto;
+.footer-buttons button {
+  min-width: 100px;
+  height: 42px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.container-button-right {
-    padding: 1rem 0rem;
-    float: right;
+.footer-buttons button:first-child {
+  background: #3498db;
+  color: white;
 }
 
-.form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    padding-bottom: .5rem;
+.footer-buttons button:first-child:hover {
+  background: #2f89c5;
 }
 
-.form-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.form-column label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.form-column .form-control {
-    width: 100%;
-    padding: 6px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.form-control-table {
-    width: 95%;
-    float: left;
-}
-
-.form-control-table:focus{
-    outline: none;
-}
-
-.form-control:focus{
-    outline: solid 1px #ccc;
-}
-
-input,textarea, select {
-    width: 100%;
-    font: inherit;
-    padding: 0.15rem 0.25rem;
-    border-radius: 4px;
-    border: 1px solid #dddddd;
-    background-color: #fff;
+.footer-buttons button:last-child {
+  background: #efefef;
 }

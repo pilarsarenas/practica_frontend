@@ -1,11 +1,146 @@
 <!--<div class="dialog-overlay" (click)="onCancel()"></div>-->
 <div class="dialog-overlay"></div>
+
 <div class="dialog-box">
+
     <div class="dialog-title">
-        <h2>Pop Up</h2>
+        <h2>Crear Usuario</h2>
     </div>
 
-    <button (click)="onSave()">Aceptar</button>
-    <button (click)="onCancel()">Cancelar</button>
-    <!-- @TODO: Implementar el contenido del pop up, así como los botones de acción (ej. Cancelar, Aceptar) -->
+    <div class="form-grid">
+
+        <div class="form-field">
+            <label>Nombre de usuario</label>
+            <input type="text" [(ngModel)]="usuario.nickUsuario" />
+        </div>
+
+        <div class="form-field">
+            <label>Contraseña</label>
+            <input type="password" [(ngModel)]="usuario.contrasena" />
+        </div>
+
+        <div class="form-field">
+            <label>Fecha de creación</label>
+            <input type="text" [value]="usuario.fechaCreacion" disabled />
+        </div>
+
+        <div class="form-field">
+            <label>Nombre</label>
+            <input type="text" [(ngModel)]="usuario.nombre" />
+        </div>
+
+        <div class="form-field">
+            <label>Primer Apellido</label>
+            <input type="text" [(ngModel)]="usuario.primerApellido" />
+        </div>
+
+        <div class="form-field">
+            <label>Segundo Apellido</label>
+            <input type="text" [(ngModel)]="usuario.segundoApellido" />
+        </div>
+
+        <div class="form-field">
+            <label>Fecha de Cumpleaños</label>
+            <input type="date" [(ngModel)]="usuario.fechaNacimiento" />
+        </div>
+
+        <div class="form-field">
+            <label>Género</label>
+            <select [(ngModel)]="usuario.genero">
+                <option *ngFor="let g of generos" [ngValue]="g">
+                    {{ g.nombre }}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label>Puesto de Trabajo</label>
+            <select [(ngModel)]="usuario.puestoTrabajo">
+                <option *ngFor="let p of puestos" [ngValue]="p">
+                    {{ p.nombre }}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label>Hora de desayuno</label>
+            <input type="time" [(ngModel)]="usuario.horaDesayuno" />
+        </div>
+
+    </div>
+
+    <div class="addresses-section">
+
+        <h3>Direcciones</h3>
+
+        <div class="address-buttons">
+
+            <button (click)="addAddress()">Crear</button>
+
+            <button (click)="addAddress()">Actualizar</button>
+
+            <button (click)="deleteAddress()">Borrar</button>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Dirección Principal</th>
+                        <th>Dirección Secundaria</th>
+                        <th>Calle</th>
+                        <th>Número</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let addr of usuario.direcciones; let i = index">
+
+                        <td>
+                            <input
+                                type="radio"
+                                name="selectedRow"
+                                (change)="selectedRowIndex = i"
+                            />
+                        </td>
+
+                        <td>
+                            <input
+                                type="radio"
+                                name="mainAddress"
+                                [checked]="addr.principal"
+                                (change)="setMainAddress(i)"
+                            />
+                        </td>
+
+                        <td>
+                            {{ addr.calle }}
+                        </td>
+
+                        <td>
+                            {{ addr.numero }}
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="footer-buttons">
+
+        <button (click)="onSave()">Guardar</button>
+
+        <button (click)="onCancel()">Cancelar</button>
+
+    </div>
+
 </div>
