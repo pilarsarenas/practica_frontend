@@ -7,6 +7,7 @@ import { Genero } from '../models/genero.model';
 import { PuestoDeTrabajo } from '../models/puestodetrabajo.model';
 
 import to from './utils.service';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,11 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+
   async obtenerUsuarios(
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.get<Usuario[]>(
         `${this.apiUrl}/usuarios`,
@@ -37,7 +38,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.get<Usuario>(
         `${this.apiUrl}/usuarios/${id}`,
@@ -53,7 +53,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.post<Usuario>(
         `${this.apiUrl}/usuarios`,
@@ -71,7 +70,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.put<Usuario>(
         `${this.apiUrl}/usuarios/${id}`,
@@ -88,7 +86,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.delete(
         `${this.apiUrl}/usuarios/${id}`,
@@ -99,12 +96,12 @@ export class UserService {
     );
   }
 
+
   async obtenerDireccionesPorUsuario(
     usuarioId: number,
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.get<Direccion[]>(
         `${this.apiUrl}/direcciones/usuario/${usuarioId}`,
@@ -120,7 +117,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.post<Direccion>(
         `${this.apiUrl}/direcciones`,
@@ -138,7 +134,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.put<Direccion>(
         `${this.apiUrl}/direcciones/${id}`,
@@ -155,7 +150,6 @@ export class UserService {
     nickUsuario: string,
     nickContrasena: string
   ) {
-
     return await to(
       this.http.delete(
         `${this.apiUrl}/direcciones/${id}`,
@@ -166,33 +160,25 @@ export class UserService {
     );
   }
 
-  async obtenerGeneros(
-    nickUsuario: string,
-    nickContrasena: string
-  ) {
+async obtenerGeneros(nickUsuario: string, nickContrasena: string) {
+  return firstValueFrom(
+    this.http.get<any[]>(
+      `${this.apiUrl}/generos`,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    )
+  );
+}
 
-    return await to(
-      this.http.get<Genero[]>(
-        `${this.apiUrl}/generos`,
-        {
-          params: { nickUsuario, nickContrasena }
-        }
-      ).toPromise()
-    );
-  }
-
-  async obtenerPuestosDeTrabajo(
-    nickUsuario: string,
-    nickContrasena: string
-  ) {
-
-    return await to(
-      this.http.get<PuestoDeTrabajo[]>(
-        `${this.apiUrl}/puestosdetrabajo`,
-        {
-          params: { nickUsuario, nickContrasena }
-        }
-      ).toPromise()
-    );
-  }
+async obtenerPuestosDeTrabajo(nickUsuario: string, nickContrasena: string) {
+  return firstValueFrom(
+    this.http.get<any[]>(
+      `${this.apiUrl}/puestosdetrabajo`,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    )
+  );
+}
 }

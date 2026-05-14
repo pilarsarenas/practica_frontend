@@ -1,6 +1,9 @@
 <!-- Popup de Usuario (Crear/Actualizar) -->
+<!-- Busca esto al principio de tu archivo y reemplázalo -->
+<!-- Cambia la etiqueta del principio por esta -->
 <app-user-popup
-    *ngIf="modoPopup !== 'CLOSED'"
+    *ngIf="modoPopup !== 'CLOSED' && adminLogged" 
+    [authUser]="adminLogged"
     [usuario]="usuarioSeleccionado"
     [modo]="modoPopup"
     (cerrarPopUpOk)="onCerrarPopUpOk()"
