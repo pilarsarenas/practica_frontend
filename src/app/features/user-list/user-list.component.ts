@@ -163,50 +163,29 @@ export class UserListComponent implements OnInit {
   }
 
   obtenerDireccionCompleta(usuario: any): string {
-
   const principal = usuario.direcciones?.find((d: any) =>
-    d.direccionPrincipal === true ||
-    d.direccionPrincipal === 1
+    d.direccionPrincipal == 1
   );
 
-  if (!principal) {
-    return 'Sin dirección';
-  }
+  if (!principal) return 'Sin dirección';
 
   const calle = principal.nombreCalle || '';
-  const numero = principal.numeroCalle
-    ? `, ${principal.numeroCalle}`
-    : '';
+  const numero = principal.numeroCalle ? `, ${principal.numeroCalle}` : '';
 
   return `${calle}${numero}`;
 }
+   
+  obtenerDireccionCorta(usuario: any): string {
+    const direccion = this.obtenerDireccionCompleta(usuario);
+    const MAX_LENGTH = 25;
 
-obtenerDireccionCorta(usuario: any): string {
-
-  const direccion = this.obtenerDireccionCompleta(usuario);
-
-  const MAX_LENGTH = 25;
-
-  return direccion.length > MAX_LENGTH
-    ? direccion.substring(0, MAX_LENGTH) + '...'
-    : direccion;
-}
-
-obtenerContadorDireccionesExtra(usuario: any): number {
-
-  if (!usuario.direcciones || usuario.direcciones.length === 0) {
-    return 0;
+    return direccion.length > MAX_LENGTH
+      ? direccion.substring(0, MAX_LENGTH) + '...'
+      : direccion;
   }
 
-  const principal = usuario.direcciones.find((d: any) =>
-    d.direccionPrincipal === true ||
-    d.direccionPrincipal === 1
-  );
-
-  if (!principal) {
-    return usuario.direcciones.length;
+  obtenerContadorDireccionesExtra(usuario: any): number {
+    if (!usuario.direcciones) return 0;
+    return Math.max(0, usuario.direcciones.length - 1);
   }
-
-  return usuario.direcciones.length - 1;
-}
 }

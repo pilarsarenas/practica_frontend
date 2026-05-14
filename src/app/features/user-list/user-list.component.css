@@ -12,7 +12,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .header {
@@ -81,7 +81,7 @@ body {
 }
 
 .trash-icon {
-  width: 18px; 
+  width: 18px;
   height: 18px;
   object-fit: contain;
 }
@@ -93,8 +93,8 @@ button:disabled {
 }
 
 .table-container {
-  max-height: 450px; 
-  overflow-y: scroll;  
+  max-height: 450px;
+  overflow-y: scroll;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
 }
@@ -135,6 +135,9 @@ tr:hover {
 
 .address-column {
   max-width: 180px;
+  display: flex;
+  justify-content: bween;
+  align-items: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -142,12 +145,14 @@ tr:hover {
 
 .extra-addresses {
   margin-left: 6px;
-  background-color: #e51400;
+  background-color: #2e6da4;
   color: white;
   border-radius: 12px;
   padding: 2px 7px;
   font-size: 12px;
   font-weight: bold;
+  white-space: nowrap;
+  margin-left: auto;
 }
 
 .img-gender {
@@ -157,6 +162,6 @@ tr:hover {
 }
 
 input[type="radio"] {
-  accent-color: #e51400; 
+  accent-color: #e51400;
   transform: scale(1.2);
 }

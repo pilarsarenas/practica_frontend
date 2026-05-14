@@ -1,7 +1,15 @@
-import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { UserService } from "src/app/core/services/user.service";
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
+
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-user-popup',
@@ -15,41 +23,69 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 })
 export class UserPopupComponent implements OnInit {
 
-  @Input() authUser!: { nickUsuario: string; contrasena: string };
+  @Input() modo: string = 'CREATE';
 
-  @Output() cerrarPopUpOk = new EventEmitter<any>();
-  @Output() cerrarPopUpCancel = new EventEmitter<void>();
+  @Input() authUser!: {
+    nickUsuario: string;
+    contrasena: string;
+  };
+
+  @Output() cerrarPopUpOk =
+    new EventEmitter<any>();
+
+  @Output() cerrarPopUpCancel =
+    new EventEmitter<void>();
 
   selectedRowIndex: number | null = null;
 
   usuario: any = {
+
     nickUsuario: '',
+
     contrasena: '',
+
     nombre: '',
+
     primerApellido: '',
+
     segundoApellido: '',
+
     fechaNacimiento: '',
+
     fechaCreacion: '',
+
     genero: null,
-    puestoTrabajo: null,
+
+    puestoDeTrabajo: null,
+
     horaDesayuno: '',
+
     esAdmin: false,
+
     direcciones: []
   };
 
   generos: any[] = [];
+
   puestos: any[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
+
     this.setFechaCreacion();
+
     this.loadCatalogs();
   }
 
   setFechaCreacion() {
+
     const now = new Date();
-    const p = (n: number) => n.toString().padStart(2, '0');
+
+    const p = (n: number) =>
+      n.toString().padStart(2, '0');
 
     this.usuario.fechaCreacion =
       `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())} ` +
@@ -57,75 +93,130 @@ export class UserPopupComponent implements OnInit {
   }
 
   async loadCatalogs() {
+
     if (!this.authUser) return;
 
     await this.loadGeneros();
+
     await this.loadPuestos();
   }
 
   async loadGeneros() {
-    const [data, err] = await this.userService.obtenerGeneros(
-  this.authUser.nickUsuario,
-  this.authUser.contrasena
-);
 
+    const [data, err] =
+      await this.userService.obtenerGeneros(
+        this.authUser.nickUsuario,
+        this.authUser.contrasena
+      );
 
     if (data) {
+
       this.generos = data;
+
     } else {
-      console.error('Error cargando géneros', err);
+
+      console.error(
+        'Error cargando géneros',
+        err
+      );
     }
   }
 
   async loadPuestos() {
-    const [data, err] = await this.userService.obtenerPuestosDeTrabajo(
-      this.authUser.nickUsuario,
-      this.authUser.contrasena
-    );
+
+    const [data, err] =
+      await this.userService.obtenerPuestosDeTrabajo(
+        this.authUser.nickUsuario,
+        this.authUser.contrasena
+      );
 
     if (data) {
+
       this.puestos = data;
+
     } else {
-      console.error('Error cargando puestos', err);
+
+      console.error(
+        'Error cargando puestos',
+        err
+      );
     }
   }
 
   async onSave() {
-    const [res, err] = await this.userService.crearUsuario(
-      this.usuario,
-      this.authUser.nickUsuario,
-      this.authUser.contrasena
-    );
+
+    const [res, err] =
+      await this.userService.crearUsuario(
+        this.usuario,
+        this.authUser.nickUsuario,
+        this.authUser.contrasena
+      );
 
     if (res) {
+
       this.cerrarPopUpOk.emit(res);
+
     } else {
-      console.error('Error creando usuario', err);
+
+      console.error(
+        'Error creando usuario',
+        err
+      );
     }
   }
 
   onCancel() {
+
     this.cerrarPopUpCancel.emit();
   }
 
   addAddress() {
+
     this.usuario.direcciones.push({
-      calle: '',
-      numero: '',
-      principal: false
+
+      nombreCalle: '',
+
+      numeroCalle: null,
+
+      direccionPrincipal: false
     });
   }
 
   deleteAddress() {
+
     if (this.selectedRowIndex === null) return;
 
-    this.usuario.direcciones.splice(this.selectedRowIndex, 1);
+    this.usuario.direcciones.splice(
+      this.selectedRowIndex,
+      1
+    );
+
     this.selectedRowIndex = null;
   }
 
   setMainAddress(index: number) {
-    this.usuario.direcciones.forEach((d: any, i: number) => {
-      d.principal = i === index;
-    });
+
+    this.usuario.direcciones.forEach(
+      (d: any, i: number) => {
+
+        d.direccionPrincipal =
+          i === index;
+      }
+    );
   }
+
+  updateAddress() {
+
+  if (this.selectedRowIndex === null) return;
+
+  const addr = this.usuario.direcciones[this.selectedRowIndex];
+
+  if (!addr) return;
+
+  if (addr.direccionPrincipal) {
+    this.setMainAddress(this.selectedRowIndex);
+  }
+
+  console.log('Dirección actualizada:', addr);
+}
 }

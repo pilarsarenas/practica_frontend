@@ -9,26 +9,24 @@ import ConstUrls from 'src/app/shared/contants/const-urls';
 })
 export class LoginService {
 
-  paramNickUsuario: string = ConstUrls.NICK_USUARIO_PARAM;
+   paramNickUsuario: string = ConstUrls.NICK_USUARIO_PARAM;
   paramContrasena: string = ConstUrls.PASS_USUARIO_PARAM;
   apiUrl: string = ConstUrls.API_URL;
 
   constructor(private http: HttpClient) {}
 
-async iniciarSesion(nickUsuario: string, contrasena: string) {
-  const body = {
-    nickUsuario,
-    contrasena
-  };
+  async iniciarSesion(nickUsuario: string, contrasena: string) {
 
-  return await to(
-    this.http
-      .post<any>(
+    const body = {
+      nickUsuario,
+      contrasena
+    };
+
+    return await to(
+      this.http.post<any>(
         `${this.apiUrl}/login`,
         body
-      )
-      .toPromise()
-  );
-}
-
+      ).toPromise()
+    );
+  }
 }
