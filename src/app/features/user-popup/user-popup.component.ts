@@ -3,9 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UserService } from 'src/app/core/services/user.service';
 
-export interface Genero { id: number; nombre: string; }
-export interface PuestoDeTrabajo { id: number; nombre: string; }
-
 @Component({
   selector: 'app-user-popup',
   templateUrl: './user-popup.component.html',
@@ -62,62 +59,90 @@ export class UserPopupComponent implements OnInit {
   }
 
   async loadCatalogs() {
-    if (!this.authUser) {
-      console.warn('No se cargan combos: authUser no disponible');
-      return;
-    }
+    if (!this.authUser) return;
 
-    try {
-      await Promise.all([
-        this.loadGeneros(),
-        this.loadPuestos()
-      ]);
-    } catch (error) {
-      console.error('Error general al cargar catálogos', error);
-    }
+    await Promise.all([
+      this.loadGeneros(),
+      this.loadPuestos()
+    ]);
   }
 
+  // -----------------------
+  // GENEROS
+  // -----------------------
 async loadGeneros() {
+
   const [data, err] = await this.userService.obtenerGeneros(
     this.authUser.nickUsuario,
     this.authUser.contrasena
   );
 
-  console.log('RAW GENEROS:', data);
+ console.log(JSON.stringify(data));
 
-  if (!data) {
+  if (err) {
+    console.error(err);
     this.generos = [];
     return;
   }
-  this.generos =
-    Array.isArray(data)
-      ? data
-      : (data.data ?? data.generos ?? [data]);
+
+  // SI VIENE ARRAY
+  if (Array.isArray(data)) {
+
+    this.generos = data;
+
+  } else if (data) {
+
+    // SI VIENE OBJETO -> LO METEMOS EN ARRAY
+    this.generos = [data];
+
+  } else {
+
+    this.generos = [];
+
+  }
 
   console.log('GENEROS FINAL:', this.generos);
 }
 
+  // -----------------------
+  // PUESTOS
+  // -----------------------
 async loadPuestos() {
+
   const [data, err] = await this.userService.obtenerPuestosDeTrabajo(
     this.authUser.nickUsuario,
     this.authUser.contrasena
   );
 
-  if (data) {
-    if (Array.isArray(data)) {
-      this.puestos = data;
-    } else if (typeof data === 'object') {
-      this.puestos = Object.values(data);
-    } else {
-      this.puestos = [];
-    }
+console.log(JSON.stringify(data));
 
-    console.log('Puestos cargados:', this.puestos);
-  } else {
+  if (err) {
+    console.error(err);
     this.puestos = [];
-    console.error('Error backend puestos:', err);
+    return;
   }
+
+  // SI VIENE ARRAY
+  if (Array.isArray(data)) {
+
+    this.puestos = data;
+
+  } else if (data) {
+
+    // SI VIENE OBJETO -> LO METEMOS EN ARRAY
+    this.puestos = [data];
+
+  } else {
+
+    this.puestos = [];
+
+  }
+
+  console.log('PUESTOS FINAL:', this.puestos);
 }
+  // -----------------------
+  // SAVE
+  // -----------------------
   async onSave() {
     const [res, err] = await this.userService.crearUsuario(
       this.usuario,
@@ -125,11 +150,12 @@ async loadPuestos() {
       this.authUser.contrasena
     );
 
-    if (res) {
-      this.cerrarPopUpOk.emit(res);
-    } else {
+    if (err) {
       console.error('Error creando usuario', err);
+      return;
     }
+
+    this.cerrarPopUpOk.emit(res);
   }
 
   onCancel() {

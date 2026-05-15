@@ -161,24 +161,27 @@ export class UserService {
   }
 
 async obtenerGeneros(nickUsuario: string, nickContrasena: string) {
-  return firstValueFrom(
-    this.http.get<any[]>(
+  return await to(
+  this.http.get<Genero[]>(
       `${this.apiUrl}/generos`,
       {
         params: { nickUsuario, nickContrasena }
       }
-    )
+    ).toPromise()
   );
 }
 
-async obtenerPuestosDeTrabajo(nickUsuario: string, nickContrasena: string) {
-  return firstValueFrom(
-    this.http.get<any[]>(
+async obtenerPuestosDeTrabajo(
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.get<PuestoDeTrabajo[]>(
       `${this.apiUrl}/puestosdetrabajo`,
       {
         params: { nickUsuario, nickContrasena }
       }
-    )
+    ).toPromise()
   );
 }
 }

@@ -21,7 +21,7 @@ export class UserListComponent implements OnInit {
   usuarios: any[] = [];
   usuarioSeleccionado?: any;
   modoPopup: string = 'CLOSED';
-  adminLogged: any; // Variable para pasar al popup
+  adminLogged: any;
 
   constructor(
     private router: Router,
@@ -33,14 +33,12 @@ export class UserListComponent implements OnInit {
   }
 
   async cargarUsuarios() {
-    // 1. Obtenemos credenciales del localStorage
     const nickUsuario = localStorage.getItem('nickUsuario') || '';
     const contrasena = localStorage.getItem('contrasena') || '';
 
-    // 2. Guardamos en adminLogged para que el popup lo reciba
+
     this.adminLogged = { nickUsuario, contrasena };
 
-    // 3. Llamada al servicio para obtener usuarios
     const resultado = await this.userService.obtenerUsuarios(nickUsuario, contrasena);
 
     let usuariosLocal: any[] = [];
@@ -56,7 +54,6 @@ export class UserListComponent implements OnInit {
       usuariosLocal = data || [];
     }
 
-    // 4. Carga de direcciones para cada usuario
     for (const usuario of usuariosLocal) {
       const resultadoDirecciones = await this.userService.obtenerDireccionesPorUsuario(
         usuario.id,
@@ -74,7 +71,6 @@ export class UserListComponent implements OnInit {
 
     this.usuarios = usuariosLocal;
 
-    // Seleccionamos el primero por defecto si existe
     if (this.usuarios.length > 0) {
       this.usuarioSeleccionado = this.usuarios[0];
     }
@@ -96,25 +92,54 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  async eliminarUsuario() {
-    if (!this.usuarioSeleccionado) return;
+async eliminarUsuario() {
+  if (!this.usuarioSeleccionado) return;
 
-    const nickUsuario = localStorage.getItem('nickUsuario') || '';
-    const contrasena = localStorage.getItem('contrasena') || '';
+  const confirmado = confirm("¿Estás seguro de que deseas eliminar el usuario seleccionado?");
+  if (!confirmado) return;
 
-    const [, error] = await this.userService.eliminarUsuario(
-      this.usuarioSeleccionado.id,
+  const nickUsuario = localStorage.getItem('nickUsuario') || '';
+  const contrasena = localStorage.getItem('contrasena') || '';
+
+  // 1. Eliminar primero todas las direcciones vinculadas
+  const direcciones = this.usuarioSeleccionado.direcciones || [];
+
+  for (const direccion of direcciones) {
+    const resultadoDir: any = await this.userService.eliminarDireccion(
+      direccion.id,
       nickUsuario,
       contrasena
     );
 
-    if (error) {
-      console.error('Error al eliminar:', error);
+    // Protección: si es null (204 No Content) se considera éxito
+    const errorDir = Array.isArray(resultadoDir) ? resultadoDir[1] : null;
+    if (errorDir) {
+      console.error('Error al eliminar dirección:', errorDir);
+      alert('No se pudo eliminar una dirección del usuario. Operación cancelada.');
       return;
     }
-
-    await this.cargarUsuarios();
   }
+
+  // 2. Eliminar el usuario
+  const resultado: any = await this.userService.eliminarUsuario(
+    this.usuarioSeleccionado.id,
+    nickUsuario,
+    contrasena
+  );
+
+  // Misma protección para el usuario
+  const error = Array.isArray(resultado) ? resultado[1] : null;
+  if (error) {
+    console.error('Error al eliminar usuario:', error);
+    alert('Error al eliminar el usuario. Inténtalo de nuevo.');
+    return;
+  }
+
+  this.usuarioSeleccionado = undefined;
+  await this.cargarUsuarios();
+}
+
+
 
   onCerrarPopUpOk(): void {
     this.modoPopup = 'CLOSED';
