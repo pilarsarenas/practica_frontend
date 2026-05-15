@@ -16,7 +16,7 @@ export class UserService {
 
   private apiUrl = 'http://localhost:8080/api/v1';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
 
   async obtenerUsuarios(
@@ -160,28 +160,28 @@ export class UserService {
     );
   }
 
-async obtenerGeneros(nickUsuario: string, nickContrasena: string) {
-  return await to(
-  this.http.get<Genero[]>(
-      `${this.apiUrl}/generos`,
-      {
-        params: { nickUsuario, nickContrasena }
-      }
-    ).toPromise()
-  );
-}
+  async obtenerGeneros(nickUsuario: string, nickContrasena: string) {
+    return await to(
+      this.http.get<Genero[]>(
+        `${this.apiUrl}/generos`,
+        {
+          params: { nickUsuario, nickContrasena }
+        }
+      ).toPromise()
+    );
+  }
 
-async obtenerPuestosDeTrabajo(
-  nickUsuario: string,
-  nickContrasena: string
-) {
-  return await to(
-    this.http.get<PuestoDeTrabajo[]>(
-      `${this.apiUrl}/puestosdetrabajo`,
-      {
-        params: { nickUsuario, nickContrasena }
-      }
-    ).toPromise()
-  );
-}
+  async obtenerPuestosDeTrabajo(
+    nickUsuario: string,
+    nickContrasena: string
+  ) {
+    return await to(
+      this.http.get<PuestoDeTrabajo[]>(
+        `${this.apiUrl}/puestosdetrabajo`,
+        {
+          params: { nickUsuario, nickContrasena }
+        }
+      ).toPromise()
+    );
+  }
 }

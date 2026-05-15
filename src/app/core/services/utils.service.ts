@@ -1,7 +1,7 @@
-import {HttpHeaders, HttpParams} from "@angular/common/http";
+import { HttpHeaders, HttpParams } from "@angular/common/http";
 import ConstUrls from "../../shared/contants/const-urls";
 import ConstLocalStorage from "../../shared/contants/const-local-storage";
-import {Usuario} from "../models/user.model";
+import { Usuario } from "../models/user.model";
 
 export default async function to(promise: Promise<any>) {
     try {

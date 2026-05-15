@@ -39,13 +39,12 @@ export class UserPopupComponent implements OnInit, OnChanges {
   puestos: any[] = [];
   catalogsLoaded = false;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.setFechaCreacion();
   }
 
-  // Se ejecuta cada vez que un @Input cambia, incluyendo la primera vez
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['authUser'] && this.authUser?.nickUsuario && !this.catalogsLoaded) {
       this.catalogsLoaded = true;
@@ -79,10 +78,8 @@ export class UserPopupComponent implements OnInit, OnChanges {
         this.authUser.contrasena
       );
 
-      // 'to' devuelve el dato directo en éxito, [err] en error
       if (!resultado) { this.generos = []; return; }
 
-      // Si es array con primer elemento que es Error -> es un error
       if (Array.isArray(resultado) && resultado[0] instanceof Error) {
         console.error('Error géneros:', resultado[0]);
         this.generos = [];
@@ -123,24 +120,54 @@ export class UserPopupComponent implements OnInit, OnChanges {
   }
   async onSave() {
     try {
+      const usuarioAEnviar = {
+        ...this.usuario,
+        fechaHoraCreacion: new Date().toISOString(),
+        fechaCreacion: undefined,
+        fechaNacimiento: this.usuario.fechaNacimiento || null,
+        genero: this.usuario.genero ? { id: this.usuario.genero.id } : null,
+        puestoDeTrabajo: this.usuario.puestoDeTrabajo ? { id: this.usuario.puestoDeTrabajo.id } : null,
+        direcciones: []
+      };
+
+      console.log('Enviando usuario:', JSON.stringify(usuarioAEnviar));
+
       const resultado = await this.userService.crearUsuario(
-        this.usuario,
+        usuarioAEnviar,
         this.authUser.nickUsuario,
         this.authUser.contrasena
       );
 
       if (!resultado) { console.error('Respuesta vacía'); return; }
+      if (Array.isArray(resultado) && resultado[0] instanceof Error) {
+        console.error('Error creando usuario:', resultado[0]);
+        alert('Error al crear el usuario.');
+        return;
+      }
 
-      const [res, err] = resultado as any;
-      if (err) { console.error('Error creando usuario:', err); return; }
+      const res = resultado as any;
+      console.log('Usuario creado con id:', res.id);
 
       if (res?.id && this.usuario.direcciones.length > 0) {
         for (const dir of this.usuario.direcciones) {
-          await this.userService.crearDireccion(
-            { ...dir, usuarioId: res.id },
+          const dirAEnviar = {
+            nombreCalle: dir.nombreCalle,
+            numeroCalle: dir.numeroCalle,
+            direccionPrincipal: dir.direccionPrincipal ? 1 : 0,
+            usuario: { id: res.id }   
+          };
+
+          console.log('Enviando dirección:', JSON.stringify(dirAEnviar));
+
+          const resultadoDir = await this.userService.crearDireccion(
+            dirAEnviar as any,
             this.authUser.nickUsuario,
             this.authUser.contrasena
           );
+
+          if (Array.isArray(resultadoDir) && resultadoDir[0] instanceof Error) {
+            console.error('Error creando dirección:', resultadoDir[0]);
+          }
         }
       }
 

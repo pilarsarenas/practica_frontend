@@ -1,10 +1,5 @@
-<app-user-popup
-    *ngIf="modoPopup !== 'CLOSED' && adminLogged" 
-    [authUser]="adminLogged"
-    [usuario]="usuarioSeleccionado"
-    [modo]="modoPopup"
-    (cerrarPopUpOk)="onCerrarPopUpOk()"
-    (cerrarPopUpCancel)="onCerrarPopUpCancel()">
+<app-user-popup *ngIf="modoPopup !== 'CLOSED' && adminLogged" [authUser]="adminLogged" [usuario]="usuarioSeleccionado"
+    [modo]="modoPopup" (cerrarPopUpOk)="onCerrarPopUpOk()" (cerrarPopUpCancel)="onCerrarPopUpCancel()">
 </app-user-popup>
 
 <div class="user-list-container">
@@ -21,24 +16,20 @@
             Crear
         </button>
 
-        <button class="main-button" 
-                [disabled]="!usuarioSeleccionado" 
-                (click)="launchPopupUpdate()">
+        <button class="main-button" [disabled]="!usuarioSeleccionado" (click)="launchPopupUpdate()">
             Actualizar
         </button>
-<button class="main-button delete-btn" 
-        [disabled]="!usuarioSeleccionado" 
-        (click)="eliminarUsuario()">
-    <img src="assets/images/DeleteIcon.JPG" class="trash-icon" alt="borrar" />
-    Borrar
-</button>
+        <button class="main-button delete-btn" [disabled]="!usuarioSeleccionado" (click)="eliminarUsuario()">
+            <img src="assets/images/DeleteIcon.JPG" class="trash-icon" alt="borrar" />
+            Borrar
+        </button>
     </div>
 
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th></th> 
+                    <th></th>
                     <th>Género</th>
                     <th>Usuario</th>
                     <th>Nombre Completo</th>
@@ -50,55 +41,46 @@
             </thead>
             <tbody>
                 @for (usuario of usuarios; track usuario.id) {
-                    <tr>
-                        <td>
-                            <input
-                                type="radio"
-                                name="selectedUser"
-                                [checked]="usuarioSeleccionado?.id === usuario.id"
-                                (change)="seleccionarUsuario(usuario)"
-                            />
-                        </td>
+                <tr>
+                    <td>
+                        <input type="radio" name="selectedUser" [checked]="usuarioSeleccionado?.id === usuario.id"
+                            (change)="seleccionarUsuario(usuario)" />
+                    </td>
 
-                        <td>
-                            <img
-                                [src]="obtenerIconoGenero(usuario.genero?.nombre)"
-                                class="img-gender"
-                                [alt]="usuario.genero?.nombre || 'genero'"
-                            />
-                        </td>
+                    <td>
+                        <img [src]="obtenerIconoGenero(usuario.genero?.nombre)" class="img-gender"
+                            [alt]="usuario.genero?.nombre || 'genero'" />
+                    </td>
 
-                        <td>{{ usuario.nickUsuario }}</td>
+                    <td>{{ usuario.nickUsuario }}</td>
 
-                        <td>
-                            {{ usuario.primerApellido }}{{ usuario.segundoApellido ? ' ' + usuario.segundoApellido : '' }}, {{ usuario.nombre }}
-                        </td>
+                    <td>
+                        {{ usuario.primerApellido }}{{ usuario.segundoApellido ? ' ' + usuario.segundoApellido : '' }},
+                        {{ usuario.nombre }}
+                    </td>
 
-                        <td>
-                            {{ usuario.fechaHoraCreacion | date:'yyyy-MM-dd HH:mm' }}
-                        </td>
+                    <td>
+                        {{ usuario.fechaHoraCreacion | date:'yyyy-MM-dd HH:mm' }}
+                    </td>
 
-                        <td>
-                           {{ usuario.horaDesayuno }}
-                        </td>
+                    <td>
+                        {{ usuario.horaDesayuno }}
+                    </td>
 
-                        <td>
-                            {{ usuario.puestoDeTrabajo?.nombre }}
-                        </td>
+                    <td>
+                        {{ usuario.puestoDeTrabajo?.nombre }}
+                    </td>
 
-                       <td
-    class="address-column"
-    [title]="obtenerDireccionCompleta(usuario)"
->
-    {{ obtenerDireccionCorta(usuario) }}
+                    <td class="address-column" [title]="obtenerDireccionCompleta(usuario)">
+                        {{ obtenerDireccionCorta(usuario) }}
 
-    @if (obtenerContadorDireccionesExtra(usuario) > 0) {
-        <span class="extra-addresses">
-            +{{ obtenerContadorDireccionesExtra(usuario) }}
-        </span>
-    }
-</td>
-                    </tr>
+                        @if (obtenerContadorDireccionesExtra(usuario) > 0) {
+                        <span class="extra-addresses">
+                            +{{ obtenerContadorDireccionesExtra(usuario) }}
+                        </span>
+                        }
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

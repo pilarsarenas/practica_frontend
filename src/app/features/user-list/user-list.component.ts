@@ -26,7 +26,7 @@ export class UserListComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     await this.cargarUsuarios();
@@ -92,52 +92,48 @@ export class UserListComponent implements OnInit {
     }
   }
 
-async eliminarUsuario() {
-  if (!this.usuarioSeleccionado) return;
+  async eliminarUsuario() {
+    if (!this.usuarioSeleccionado) return;
 
-  const confirmado = confirm("¿Estás seguro de que deseas eliminar el usuario seleccionado?");
-  if (!confirmado) return;
+    const confirmado = confirm("¿Estás seguro de que deseas eliminar el usuario seleccionado?");
+    if (!confirmado) return;
 
-  const nickUsuario = localStorage.getItem('nickUsuario') || '';
-  const contrasena = localStorage.getItem('contrasena') || '';
+    const nickUsuario = localStorage.getItem('nickUsuario') || '';
+    const contrasena = localStorage.getItem('contrasena') || '';
 
-  // 1. Eliminar primero todas las direcciones vinculadas
-  const direcciones = this.usuarioSeleccionado.direcciones || [];
+    const direcciones = this.usuarioSeleccionado.direcciones || [];
 
-  for (const direccion of direcciones) {
-    const resultadoDir: any = await this.userService.eliminarDireccion(
-      direccion.id,
+    for (const direccion of direcciones) {
+      const resultadoDir: any = await this.userService.eliminarDireccion(
+        direccion.id,
+        nickUsuario,
+        contrasena
+      );
+
+      const errorDir = Array.isArray(resultadoDir) ? resultadoDir[1] : null;
+      if (errorDir) {
+        console.error('Error al eliminar dirección:', errorDir);
+        alert('No se pudo eliminar una dirección del usuario. Operación cancelada.');
+        return;
+      }
+    }
+
+    const resultado: any = await this.userService.eliminarUsuario(
+      this.usuarioSeleccionado.id,
       nickUsuario,
       contrasena
     );
 
-    // Protección: si es null (204 No Content) se considera éxito
-    const errorDir = Array.isArray(resultadoDir) ? resultadoDir[1] : null;
-    if (errorDir) {
-      console.error('Error al eliminar dirección:', errorDir);
-      alert('No se pudo eliminar una dirección del usuario. Operación cancelada.');
+    const error = Array.isArray(resultado) ? resultado[1] : null;
+    if (error) {
+      console.error('Error al eliminar usuario:', error);
+      alert('Error al eliminar el usuario. Inténtalo de nuevo.');
       return;
     }
+
+    this.usuarioSeleccionado = undefined;
+    await this.cargarUsuarios();
   }
-
-  // 2. Eliminar el usuario
-  const resultado: any = await this.userService.eliminarUsuario(
-    this.usuarioSeleccionado.id,
-    nickUsuario,
-    contrasena
-  );
-
-  // Misma protección para el usuario
-  const error = Array.isArray(resultado) ? resultado[1] : null;
-  if (error) {
-    console.error('Error al eliminar usuario:', error);
-    alert('Error al eliminar el usuario. Inténtalo de nuevo.');
-    return;
-  }
-
-  this.usuarioSeleccionado = undefined;
-  await this.cargarUsuarios();
-}
 
 
 

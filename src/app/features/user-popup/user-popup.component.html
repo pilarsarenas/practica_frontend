@@ -46,23 +46,17 @@
                 <input type="date" [(ngModel)]="usuario.fechaNacimiento" />
             </div>
 
-            <!-- GENERO -->
             <div class="form-field">
 
                 <label>Género</label>
 
-                <select
-                    [(ngModel)]="usuario.genero"
-                    [compareWith]="compareObjects"
-                    name="genero">
+                <select [(ngModel)]="usuario.genero" [compareWith]="compareObjects" name="genero">
 
                     <option [ngValue]="null">
                         Seleccione...
                     </option>
 
-                    <option
-                        *ngFor="let g of generos"
-                        [ngValue]="g">
+                    <option *ngFor="let g of generos" [ngValue]="g">
 
                         {{ g.nombre }}
 
@@ -72,23 +66,17 @@
 
             </div>
 
-            <!-- PUESTO -->
             <div class="form-field">
 
                 <label>Puesto de Trabajo</label>
 
-                <select
-                    [(ngModel)]="usuario.puestoDeTrabajo"
-                    [compareWith]="compareObjects"
-                    name="puesto">
+                <select [(ngModel)]="usuario.puestoDeTrabajo" [compareWith]="compareObjects" name="puesto">
 
                     <option [ngValue]="null">
                         Seleccione...
                     </option>
 
-                    <option
-                        *ngFor="let p of puestos"
-                        [ngValue]="p">
+                    <option *ngFor="let p of puestos" [ngValue]="p">
 
                         {{ p.nombre }}
 
@@ -115,24 +103,15 @@
                     Crear
                 </button>
 
-                <button
-                    type="button"
-                    (click)="updateAddress()"
-                    [disabled]="selectedRowIndex === null">
+                <button type="button" (click)="updateAddress()" [disabled]="selectedRowIndex === null">
 
                     Actualizar
 
                 </button>
 
-                <button
-                    type="button"
-                    class="main-button delete-btn"
-                    (click)="deleteAddress()">
+                <button type="button" class="main-button delete-btn" (click)="deleteAddress()">
 
-                    <img
-                        src="assets/images/DeleteIcon.JPG"
-                        class="trash-icon"
-                        alt="borrar" />
+                    <img src="assets/images/DeleteIcon.JPG" class="trash-icon" alt="borrar" />
 
                     Borrar
 
@@ -158,31 +137,21 @@
                         <tr *ngFor="let addr of usuario.direcciones; let i = index">
 
                             <td>
-                                <input
-                                    type="radio"
-                                    name="selectedRow"
-                                    [checked]="selectedRowIndex === i"
+                                <input type="radio" name="selectedRow" [checked]="selectedRowIndex === i"
                                     (change)="selectedRowIndex = i" />
                             </td>
 
                             <td>
-                                <input
-                                    type="radio"
-                                    name="mainAddress"
-                                    [checked]="addr.direccionPrincipal"
+                                <input type="radio" name="mainAddress" [checked]="addr.direccionPrincipal"
                                     (change)="setMainAddress(i)" />
                             </td>
 
                             <td>
-                                <input
-                                    type="text"
-                                    [(ngModel)]="addr.nombreCalle" />
+                                <input type="text" [(ngModel)]="addr.nombreCalle" />
                             </td>
 
                             <td>
-                                <input
-                                    type="number"
-                                    [(ngModel)]="addr.numeroCalle" />
+                                <input type="number" [(ngModel)]="addr.numeroCalle" />
                             </td>
 
                         </tr>
