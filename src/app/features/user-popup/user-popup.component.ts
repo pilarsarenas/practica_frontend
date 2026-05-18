@@ -21,6 +21,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
 
   selectedRowIndex: number | null = null;
   passwordError: string = '';
+  nickError: string = '';
 
   usuario: any = {
     nickUsuario: '',
@@ -104,8 +105,8 @@ export class UserPopupComponent implements OnInit, OnChanges {
       direcciones: u.direcciones ? [...u.direcciones] : []
     };
 
-    // Limpiar error de contraseña al cargar usuario
     this.passwordError = '';
+    this.nickError = '';
     this.selectedRowIndex = null;
   }
 
@@ -125,6 +126,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
       direcciones: []
     };
     this.passwordError = '';
+    this.nickError = '';
     this.setFechaCreacion();
     this.selectedRowIndex = null;
   }
@@ -141,8 +143,20 @@ export class UserPopupComponent implements OnInit, OnChanges {
       `${p(now.getHours())}:${p(now.getMinutes())}`;
   }
 
+  validarNick(nick: string): boolean {
+    if (!nick || nick.trim().length === 0) {
+      this.nickError = 'El nombre de usuario es obligatorio.';
+      return false;
+    }
+    if (nick.trim().length < 3) {
+      this.nickError = 'El nombre de usuario debe tener al menos 3 caracteres.';
+      return false;
+    }
+    this.nickError = '';
+    return true;
+  }
+
   validarContrasena(contrasena: string): boolean {
-    // En UPDATE, si el campo está vacío se conserva la original (no se valida)
     if (this.modo === 'UPDATE' && !contrasena) {
       this.passwordError = '';
       return true;
@@ -191,10 +205,11 @@ export class UserPopupComponent implements OnInit, OnChanges {
   }
 
   async onSave() {
-    if (!this.validarContrasena(this.usuario.contrasena)) return;
+    const nickValido = this.validarNick(this.usuario.nickUsuario);
+    const passValida = this.validarContrasena(this.usuario.contrasena);
+    if (!nickValido || !passValida) return;
 
     try {
-      // En UPDATE con contraseña vacía, conservar la original
       const contrasenaFinal = (this.modo === 'UPDATE' && !this.usuario.contrasena)
         ? this.usuarioEntrada?.contrasena
         : this.usuario.contrasena;

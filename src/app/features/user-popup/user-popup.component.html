@@ -10,7 +10,13 @@
         <div class="form-grid">
             <div class="form-field">
                 <label>Nombre de usuario</label>
-                <input type="text" [(ngModel)]="usuario.nickUsuario" />
+                <input
+                    type="text"
+                    [(ngModel)]="usuario.nickUsuario"
+                    [class.input-error]="nickError"
+                    (ngModelChange)="validarNick($event)"
+                />
+                <span class="error-msg" *ngIf="nickError">{{ nickError }}</span>
             </div>
             <div class="form-field">
                 <label>Contraseña</label>
