@@ -136,7 +136,6 @@ export class UserListComponent implements OnInit {
   }
 
 
-
   onCerrarPopUpOk(): void {
     this.modoPopup = 'CLOSED';
     this.cargarUsuarios();

@@ -1,5 +1,10 @@
-<app-user-popup *ngIf="modoPopup !== 'CLOSED' && adminLogged" [authUser]="adminLogged" [usuario]="usuarioSeleccionado"
-    [modo]="modoPopup" (cerrarPopUpOk)="onCerrarPopUpOk()" (cerrarPopUpCancel)="onCerrarPopUpCancel()">
+<app-user-popup
+    *ngIf="modoPopup !== 'CLOSED' && adminLogged"
+    [authUser]="adminLogged"
+    [usuarioEntrada]="modoPopup === 'UPDATE' ? usuarioSeleccionado : null"
+    [modo]="modoPopup"
+    (cerrarPopUpOk)="onCerrarPopUpOk()"
+    (cerrarPopUpCancel)="onCerrarPopUpCancel()">
 </app-user-popup>
 
 <div class="user-list-container">
