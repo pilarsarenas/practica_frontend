@@ -76,11 +76,6 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  logout(): void {
-    localStorage.removeItem('nickUsuario');
-    localStorage.removeItem('contrasena');
-    this.router.navigate(['/login']);
-  }
 
   launchPopupCreate(): void {
     this.modoPopup = 'CREATE';
@@ -171,8 +166,9 @@ export class UserListComponent implements OnInit {
     return direccion.length > MAX_LENGTH ? direccion.substring(0, MAX_LENGTH) + '...' : direccion;
   }
 
-  obtenerContadorDireccionesExtra(usuario: any): number {
-    if (!usuario.direcciones) return 0;
-    return Math.max(0, usuario.direcciones.length - 1);
-  }
+obtenerContadorDireccionesExtra(usuario: any): number {
+  if (!usuario.direcciones) return 0;
+  const tienePrincipal = usuario.direcciones.some((d: any) => d.direccionPrincipal == 1);
+  return Math.max(0, usuario.direcciones.length - (tienePrincipal ? 1 : 0));
+}
 }

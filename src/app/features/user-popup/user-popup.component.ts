@@ -14,12 +14,13 @@ export class UserPopupComponent implements OnInit, OnChanges {
 
   @Input() modo: string = 'CREATE';
   @Input() authUser!: { nickUsuario: string; contrasena: string; };
-  @Input() usuarioEntrada: any = null; // usuario a editar en modo UPDATE
+  @Input() usuarioEntrada: any = null;
 
   @Output() cerrarPopUpOk = new EventEmitter<any>();
   @Output() cerrarPopUpCancel = new EventEmitter<void>();
 
   selectedRowIndex: number | null = null;
+  passwordError: string = '';
 
   usuario: any = {
     nickUsuario: '',
@@ -49,18 +50,15 @@ export class UserPopupComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Cargar catálogos cuando authUser esté listo
     if (changes['authUser'] && this.authUser?.nickUsuario && !this.catalogsLoaded) {
       this.catalogsLoaded = true;
       this.loadCatalogs().then(() => {
-        // Después de cargar catálogos, si es UPDATE cargar el usuario
         if (this.modo === 'UPDATE' && this.usuarioEntrada) {
           this.cargarUsuarioParaEditar();
         }
       });
     }
 
-    // Si cambia el modo o el usuario entrada y ya tenemos catálogos
     if ((changes['modo'] || changes['usuarioEntrada']) && this.catalogsLoaded) {
       if (this.modo === 'UPDATE' && this.usuarioEntrada) {
         this.cargarUsuarioParaEditar();
@@ -73,19 +71,16 @@ export class UserPopupComponent implements OnInit, OnChanges {
   cargarUsuarioParaEditar() {
     const u = this.usuarioEntrada;
 
-    // Formatear fechaNacimiento a 'yyyy-MM-dd' para el input type="date"
     let fechaNac = '';
     if (u.fechaNacimiento) {
       const d = new Date(u.fechaNacimiento);
       if (!isNaN(d.getTime())) {
         fechaNac = d.toISOString().substring(0, 10);
       } else {
-        // Si ya viene como string 'yyyy-MM-dd'
         fechaNac = u.fechaNacimiento;
       }
     }
 
-    // Formatear fechaHoraCreacion para mostrar en el campo disabled
     let fechaCreacionMostrar = '';
     if (u.fechaHoraCreacion) {
       const d = new Date(u.fechaHoraCreacion);
@@ -97,7 +92,6 @@ export class UserPopupComponent implements OnInit, OnChanges {
       }
     }
 
-    // Buscar el objeto completo de genero y puesto en los catálogos cargados
     const generoCatalogo = this.generos.find(g => g.id === u.genero?.id) || null;
     const puestoCatalogo = this.puestos.find(p => p.id === u.puestoDeTrabajo?.id) || null;
 
@@ -110,6 +104,8 @@ export class UserPopupComponent implements OnInit, OnChanges {
       direcciones: u.direcciones ? [...u.direcciones] : []
     };
 
+    // Limpiar error de contraseña al cargar usuario
+    this.passwordError = '';
     this.selectedRowIndex = null;
   }
 
@@ -128,6 +124,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
       esAdmin: false,
       direcciones: []
     };
+    this.passwordError = '';
     this.setFechaCreacion();
     this.selectedRowIndex = null;
   }
@@ -142,6 +139,25 @@ export class UserPopupComponent implements OnInit, OnChanges {
     this.usuario.fechaHoraCreacion =
       `${now.getFullYear()}-${p(now.getMonth() + 1)}-${p(now.getDate())} ` +
       `${p(now.getHours())}:${p(now.getMinutes())}`;
+  }
+
+  validarContrasena(contrasena: string): boolean {
+    // En UPDATE, si el campo está vacío se conserva la original (no se valida)
+    if (this.modo === 'UPDATE' && !contrasena) {
+      this.passwordError = '';
+      return true;
+    }
+    if (!contrasena) {
+      this.passwordError = 'La contraseña es obligatoria.';
+      return false;
+    }
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!regex.test(contrasena)) {
+      this.passwordError = 'Mínimo 6 caracteres, una mayúscula, una minúscula y un número.';
+      return false;
+    }
+    this.passwordError = '';
+    return true;
   }
 
   async loadCatalogs() {
@@ -175,12 +191,20 @@ export class UserPopupComponent implements OnInit, OnChanges {
   }
 
   async onSave() {
+    if (!this.validarContrasena(this.usuario.contrasena)) return;
+
     try {
+      // En UPDATE con contraseña vacía, conservar la original
+      const contrasenaFinal = (this.modo === 'UPDATE' && !this.usuario.contrasena)
+        ? this.usuarioEntrada?.contrasena
+        : this.usuario.contrasena;
+
       const usuarioAEnviar = {
         ...this.usuario,
+        contrasena: contrasenaFinal,
         fechaHoraCreacion: this.modo === 'CREATE'
           ? new Date().toISOString()
-          : this.usuarioEntrada?.fechaHoraCreacion,  // conservar la original en UPDATE
+          : this.usuarioEntrada?.fechaHoraCreacion,
         fechaNacimiento: this.usuario.fechaNacimiento || null,
         genero: this.usuario.genero ? { id: this.usuario.genero.id } : null,
         puestoDeTrabajo: this.usuario.puestoDeTrabajo ? { id: this.usuario.puestoDeTrabajo.id } : null,
@@ -198,7 +222,6 @@ export class UserPopupComponent implements OnInit, OnChanges {
         }
         res = resultado;
 
-        // Crear todas las direcciones nuevas
         for (const dir of this.usuario.direcciones) {
           await this.guardarDireccion(dir, res.id, 'CREATE');
         }
@@ -212,11 +235,9 @@ export class UserPopupComponent implements OnInit, OnChanges {
         }
         res = resultado;
 
-        // Sincronizar direcciones:
         const direccionesOriginales: any[] = this.usuarioEntrada?.direcciones || [];
         const direccionesActuales: any[] = this.usuario.direcciones;
 
-        // Eliminar las que ya no están
         for (const dirOrig of direccionesOriginales) {
           const sigueExistiendo = direccionesActuales.find((d: any) => d.id === dirOrig.id);
           if (!sigueExistiendo) {
@@ -226,7 +247,6 @@ export class UserPopupComponent implements OnInit, OnChanges {
           }
         }
 
-        // Crear o actualizar las actuales
         for (const dir of direccionesActuales) {
           await this.guardarDireccion(dir, res.id, dir.id ? 'UPDATE' : 'CREATE');
         }

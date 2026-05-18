@@ -21,7 +21,6 @@
   padding: 22px 28px;
   z-index: 1001;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-
   display: flex;
   flex-direction: column;
 }
@@ -59,9 +58,26 @@
   font-size: 15px;
 }
 
+.input-error {
+  border-color: #e74c3c !important;
+  background-color: #fff5f5;
+}
+
+.error-msg {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.hint-msg {
+  color: #999;
+  font-size: 12px;
+  margin-top: 4px;
+  font-style: italic;
+}
+
 .delete-btn {
   background-color: #d9534f !important;
-
 }
 
 .delete-btn:hover {
@@ -184,13 +200,6 @@ input[type="radio"] {
 
 .footer-buttons button:last-child {
   background: #efefef;
-}
-
-.table-wrapper {
-  max-height: 180px;
-  overflow-y: scroll;
-  border: 1px solid #ddd;
-  border-radius: 6px;
 }
 
 .dialog-content {
