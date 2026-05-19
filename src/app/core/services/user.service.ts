@@ -171,6 +171,53 @@ export class UserService {
     );
   }
 
+  async crearGenero(
+  genero: Genero,
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.post<Genero>(
+      `${this.apiUrl}/generos`,
+      genero,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    ).toPromise()
+  );
+}
+
+async actualizarGenero(
+  id: number,
+  genero: Genero,
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.put<Genero>(
+      `${this.apiUrl}/generos/${id}`,
+      genero,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    ).toPromise()
+  );
+}
+
+async eliminarGenero(
+  id: number,
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.delete(
+      `${this.apiUrl}/generos/${id}`,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    ).toPromise()
+  );
+}
   async obtenerPuestosDeTrabajo(
     nickUsuario: string,
     nickContrasena: string
@@ -184,4 +231,53 @@ export class UserService {
       ).toPromise()
     );
   }
+
+async crearPuestoDeTrabajo(
+  puesto: PuestoDeTrabajo,
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.post<PuestoDeTrabajo>(
+      `${this.apiUrl}/puestosdetrabajo`,
+      puesto,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    ).toPromise()
+  );
+}
+
+async actualizarPuestoDeTrabajo(
+  id: number,
+  puesto: PuestoDeTrabajo,
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.put<PuestoDeTrabajo>(
+      `${this.apiUrl}/puestosdetrabajo/${id}`,
+      puesto,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    ).toPromise()
+  );
+}
+
+async eliminarPuestoDeTrabajo(
+  id: number,
+  nickUsuario: string,
+  nickContrasena: string
+) {
+  return await to(
+    this.http.delete(
+      `${this.apiUrl}/puestosdetrabajo/${id}`,
+      {
+        params: { nickUsuario, nickContrasena }
+      }
+    ).toPromise()
+  );
+}
+
 }
