@@ -174,6 +174,21 @@ export class UserPopupComponent implements OnInit, OnChanges {
     return true;
   }
 
+  async nickEstaRepetido(): Promise<boolean> {
+    const nick = this.usuario.nickUsuario?.trim().toLowerCase();
+    const resultado = await this.userService.obtenerUsuarios(
+      this.authUser.nickUsuario,
+      this.authUser.contrasena
+    );
+    const usuarios: any[] = Array.isArray(resultado) ? resultado : [];
+
+    return usuarios.some((u: any) => {
+      const mismoNick = u.nickUsuario?.trim().toLowerCase() === nick;
+      const esElMismo = this.modo === 'UPDATE' && u.id === this.usuarioEntrada?.id;
+      return mismoNick && !esElMismo;
+    });
+  }
+
   async loadCatalogs() {
     await Promise.all([this.loadGeneros(), this.loadPuestos()]);
   }
@@ -208,6 +223,12 @@ export class UserPopupComponent implements OnInit, OnChanges {
     const nickValido = this.validarNick(this.usuario.nickUsuario);
     const passValida = this.validarContrasena(this.usuario.contrasena);
     if (!nickValido || !passValida) return;
+
+    const repetido = await this.nickEstaRepetido();
+    if (repetido) {
+      this.nickError = 'Este nombre de usuario ya está en uso.';
+      return;
+    }
 
     try {
       const contrasenaFinal = (this.modo === 'UPDATE' && !this.usuario.contrasena)
