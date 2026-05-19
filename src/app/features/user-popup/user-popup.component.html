@@ -10,26 +10,19 @@
         <div class="form-grid">
             <div class="form-field">
                 <label>Nombre de usuario</label>
-                <input
-                    type="text"
-                    [(ngModel)]="usuario.nickUsuario"
-                    [class.input-error]="nickError"
-                    (ngModelChange)="validarNick($event)"
-                />
+                <input type="text" [(ngModel)]="usuario.nickUsuario" [class.input-error]="nickError"
+                    (ngModelChange)="validarNick($event)" />
                 <span class="error-msg" *ngIf="nickError">{{ nickError }}</span>
             </div>
             <div class="form-field">
                 <label>Contraseña</label>
-                <input
-                    type="password"
-                    [(ngModel)]="usuario.contrasena"
-                    [class.input-error]="passwordError"
-                    (ngModelChange)="validarContrasena($event)"
-                />
+                <input type="password" [(ngModel)]="usuario.contrasena" [class.input-error]="passwordError"
+                    (ngModelChange)="validarContrasena($event)" />
                 <span class="error-msg" *ngIf="passwordError">{{ passwordError }}</span>
-                <span class="hint-msg" *ngIf="modo === 'UPDATE' && !usuario.contrasena">
-                    Deja vacío para mantener la contraseña actual.
+                <span class="hint-msg" *ngIf="modo === 'UPDATE'">
+                    Deja vacío para mantener la contraseña actual
                 </span>
+
             </div>
             <div class="form-field">
                 <label>Fecha de creación</label>
@@ -65,9 +58,12 @@
                     <option *ngFor="let p of puestos" [ngValue]="p">{{ p.nombre }}</option>
                 </select>
             </div>
+
             <div class="form-field">
                 <label>Hora de desayuno</label>
-                <input type="time" [(ngModel)]="usuario.horaDesayuno" />
+                <input type="time" [(ngModel)]="usuario.horaDesayuno" [class.input-error]="horaDesayunoError"
+                    (ngModelChange)="validarHoraDesayuno($event)" />
+                <span class="error-msg" *ngIf="horaDesayunoError">{{ horaDesayunoError }}</span>
             </div>
         </div>
 
@@ -75,7 +71,8 @@
             <h3>Direcciones</h3>
             <div class="address-buttons">
                 <button type="button" (click)="addAddress()">Crear</button>
-                <button type="button" (click)="updateAddress()" [disabled]="selectedRowIndex === null">Actualizar</button>
+                <button type="button" (click)="updateAddress()"
+                    [disabled]="selectedRowIndex === null">Actualizar</button>
                 <button type="button" class="main-button delete-btn" (click)="deleteAddress()">
                     <img src="assets/images/DeleteIcon.JPG" class="trash-icon" alt="borrar" />
                     Borrar
@@ -94,13 +91,11 @@
                     <tbody>
                         <tr *ngFor="let addr of usuario.direcciones; let i = index">
                             <td>
-                                <input type="radio" name="selectedRow"
-                                    [checked]="selectedRowIndex === i"
+                                <input type="radio" name="selectedRow" [checked]="selectedRowIndex === i"
                                     (change)="selectedRowIndex = i" />
                             </td>
                             <td>
-                                <input type="radio" name="mainAddress"
-                                    [checked]="addr.direccionPrincipal == 1"
+                                <input type="radio" name="mainAddress" [checked]="addr.direccionPrincipal == 1"
                                     (change)="setMainAddress(i)" />
                             </td>
                             <td><input type="text" [(ngModel)]="addr.nombreCalle" /></td>

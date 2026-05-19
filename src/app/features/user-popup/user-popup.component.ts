@@ -22,6 +22,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
   selectedRowIndex: number | null = null;
   passwordError: string = '';
   nickError: string = '';
+  horaDesayunoError: string = '';
 
   usuario: any = {
     nickUsuario: '',
@@ -70,6 +71,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
   }
 
   cargarUsuarioParaEditar() {
+    
     const u = this.usuarioEntrada;
 
     let fechaNac = '';
@@ -98,6 +100,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
 
     this.usuario = {
       ...u,
+      contrasena: '',
       fechaNacimiento: fechaNac,
       fechaHoraCreacion: fechaCreacionMostrar,
       genero: generoCatalogo,
@@ -107,6 +110,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
 
     this.passwordError = '';
     this.nickError = '';
+    this.horaDesayunoError = '';
     this.selectedRowIndex = null;
   }
 
@@ -127,6 +131,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
     };
     this.passwordError = '';
     this.nickError = '';
+    this.horaDesayunoError = '';
     this.setFechaCreacion();
     this.selectedRowIndex = null;
   }
@@ -171,6 +176,20 @@ export class UserPopupComponent implements OnInit, OnChanges {
       return false;
     }
     this.passwordError = '';
+    return true;
+  }
+
+  validarHoraDesayuno(hora: string): boolean {
+    if (!hora || hora.trim() === '') {
+      this.horaDesayunoError = '';
+      return true; 
+    }
+    const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    if (!regex.test(hora)) {
+      this.horaDesayunoError = 'La hora debe tener el formato HH:MM (ej: 08:30).';
+      return false;
+    }
+    this.horaDesayunoError = '';
     return true;
   }
 
@@ -222,7 +241,9 @@ export class UserPopupComponent implements OnInit, OnChanges {
   async onSave() {
     const nickValido = this.validarNick(this.usuario.nickUsuario);
     const passValida = this.validarContrasena(this.usuario.contrasena);
-    if (!nickValido || !passValida) return;
+    const horaValida = this.validarHoraDesayuno(this.usuario.horaDesayuno);
+
+    if (!nickValido || !passValida || !horaValida) return;
 
     const repetido = await this.nickEstaRepetido();
     if (repetido) {
