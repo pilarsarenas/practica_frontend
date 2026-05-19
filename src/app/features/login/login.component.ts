@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/core/services/auth.service';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -25,18 +24,22 @@ export class LoginComponent {
   }
 
   async login() {
-    console.log("Login button clicked");
+    if (!this.nickUsuario || this.nickUsuario.trim() === '') {
+      this.errorMessage = 'El nombre de usuario es obligatorio';
+      return;
+    }
+    if (!this.contrasena || this.contrasena.trim() === '') {
+      this.errorMessage = 'La contraseña es obligatoria';
+      return;
+    }
+
     let result = await this.loginService.iniciarSesion(this.nickUsuario, this.contrasena);
     if (result === true) {
-      console.log("Login successful");
       localStorage.setItem('nickUsuario', this.nickUsuario);
       localStorage.setItem('contrasena', this.contrasena);
       this.router.navigate(['/usuarios']);
     } else {
-      console.log("Login failed");
-      this.errorMessage = "Credenciales incorrectas";
+      this.errorMessage = 'Credenciales incorrectas';
     }
-    console.log("Login result:", result);
   }
-  
 }

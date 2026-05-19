@@ -2,12 +2,15 @@
     <h2>Login</h2>
     <div class="form-group">
         <label for="nickUsuario">Nick Usuario:</label>
-        <input type="text" id="nickUsuario" name="nickUsuario" [(ngModel)]="nickUsuario">
-
+        <input type="text" id="nickUsuario" name="nickUsuario"
+            [(ngModel)]="nickUsuario"
+            (ngModelChange)="errorMessage = ''">
     </div>
     <div class="form-group">
         <label for="contrasena">Contraseña:</label>
-        <input type="password" id="contrasena" name="contrasena" [(ngModel)]="contrasena">
+        <input type="password" id="contrasena" name="contrasena"
+            [(ngModel)]="contrasena"
+            (ngModelChange)="errorMessage = ''">
     </div>
 
     <button class="login-button" (click)="login()">Iniciar Sesión</button>
@@ -17,5 +20,4 @@
             {{ errorMessage }}
         </p>
     }
-
 </div>
