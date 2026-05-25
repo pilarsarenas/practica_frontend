@@ -124,6 +124,31 @@
                 </span>
             </div>
 
+            <div class="form-field">
+
+                <label>Foto de Perfil</label>
+
+                <div class="image-upload-container">
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        #fileInput />
+
+                    <button
+                        type="button"
+                        class="btn-subir-imagen"
+                        (click)="fileInput.click()">
+
+                        Subir imagen de perfil
+
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
 
         <div class="addresses-section">

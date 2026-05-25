@@ -232,3 +232,25 @@ input[type="radio"] {
 .btn-gestionar:hover {
   background-color: #5a6268;
 }
+.image-upload-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.btn-subir-imagen {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.btn-subir-imagen:hover {
+  background-color: #2f89c5;
+}
+
