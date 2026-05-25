@@ -1,14 +1,86 @@
-
-<app-user-popup *ngIf="modoPopup !== 'CLOSED'"
-                (cerrarPopUpOk)="onCerrarPopUpOk()"
-                (cerrarPopUpCancel)="onCerrarPopUpCancel()"
-/>
+<app-user-popup *ngIf="modoPopup !== 'CLOSED' && adminLogged" [authUser]="adminLogged"
+    [usuarioEntrada]="modoPopup === 'UPDATE' ? usuarioSeleccionado : null" [modo]="modoPopup"
+    (cerrarPopUpOk)="onCerrarPopUpOk()" (cerrarPopUpCancel)="onCerrarPopUpCancel()">
+</app-user-popup>
 
 <div class="user-list-container">
-    <h2>User List</h2>
-    <!-- @TODO: Implement user list display here -->
-    <div>
-        <button (click)="launchPopup()">Popup</button>
+
+    <div class="header">
+        <h2>LISTA DE USUARIOS</h2>
+
     </div>
 
+    <div class="button-container">
+        <button class="main-button" (click)="launchPopupCreate()">
+            Crear
+        </button>
+
+        <button class="main-button" [disabled]="!usuarioSeleccionado" (click)="launchPopupUpdate()">
+            Actualizar
+        </button>
+        <button class="main-button delete-btn" [disabled]="!usuarioSeleccionado" (click)="eliminarUsuario()">
+            <img src="assets/images/DeleteIcon.JPG" class="trash-icon" alt="borrar" />
+            Borrar
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Género</th>
+                    <th>Usuario</th>
+                    <th>Nombre Completo</th>
+                    <th>Fecha de Creación</th>
+                    <th>Desayuno</th>
+                    <th>Puesto de trabajo</th>
+                    <th>Dirección Principal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (usuario of usuarios; track usuario.id) {
+                <tr>
+                    <td>
+                        <input type="radio" name="selectedUser" [checked]="usuarioSeleccionado?.id === usuario.id"
+                            (change)="seleccionarUsuario(usuario)" />
+                    </td>
+
+                    <td>
+                        <img [src]="obtenerIconoGenero(usuario.genero?.nombre)" class="img-gender"
+                            [alt]="usuario.genero?.nombre || 'genero'" />
+                    </td>
+
+                    <td>{{ usuario.nickUsuario }}</td>
+
+                    <td>
+                        {{ usuario.primerApellido }}{{ usuario.segundoApellido ? ' ' + usuario.segundoApellido : '' }},
+                        {{ usuario.nombre }}
+                    </td>
+
+                    <td>
+                        {{ formatearFecha(usuario.fechaHoraCreacion) }} </td>
+
+                    <td>
+                        {{ usuario.horaDesayuno }}
+                    </td>
+
+                    <td>
+                        {{ usuario.puestoDeTrabajo?.nombre }}
+                    </td>
+
+                    <td class="address-column" [title]="obtenerDireccionCompleta(usuario)">
+                        {{ obtenerDireccionCorta(usuario) }}
+
+                        @if (obtenerContadorDireccionesExtra(usuario) > 0) {
+                        <span class="extra-addresses">
+                            +{{ obtenerContadorDireccionesExtra(usuario) }}
+                        </span>
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

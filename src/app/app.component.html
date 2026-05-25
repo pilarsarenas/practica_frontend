@@ -1,4 +1,7 @@
 <div class="nz-layout">
+     @if (router.url !== '/login') {
+    <app-header />
+  }
     <div class="nz-content">
         <h2>Usuarios App</h2>
         <router-outlet></router-outlet>
