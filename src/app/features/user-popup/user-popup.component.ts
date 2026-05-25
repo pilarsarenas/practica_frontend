@@ -70,30 +70,32 @@ export class UserPopupComponent implements OnInit, OnChanges {
     }
   }
 
+  parsearFechaLocal(fechaStr: string): string {
+    if (!fechaStr) return '';
+    const partes = fechaStr.toString().replace('T', '-').replace(/:/g, '-').split('-');
+    const year = partes[0];
+    const month = partes[1];
+    const day = partes[2];
+    const hour = partes[3] || '00';
+    const min = partes[4] || '00';
+    return `${year}-${month}-${day} ${hour}:${min}`;
+  }
+
+  getFechaLocalISO(): string {
+    const now = new Date();
+    const p = (n: number) => n.toString().padStart(2, '0');
+    return `${now.getFullYear()}-${p(now.getMonth()+1)}-${p(now.getDate())}T${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`;
+  }
+
   cargarUsuarioParaEditar() {
-    
     const u = this.usuarioEntrada;
 
     let fechaNac = '';
     if (u.fechaNacimiento) {
-      const d = new Date(u.fechaNacimiento);
-      if (!isNaN(d.getTime())) {
-        fechaNac = d.toISOString().substring(0, 10);
-      } else {
-        fechaNac = u.fechaNacimiento;
-      }
+      fechaNac = u.fechaNacimiento.toString().substring(0, 10);
     }
 
-    let fechaCreacionMostrar = '';
-    if (u.fechaHoraCreacion) {
-      const d = new Date(u.fechaHoraCreacion);
-      if (!isNaN(d.getTime())) {
-        const p = (n: number) => n.toString().padStart(2, '0');
-        fechaCreacionMostrar =
-          `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ` +
-          `${p(d.getHours())}:${p(d.getMinutes())}`;
-      }
-    }
+    const fechaCreacionMostrar = this.parsearFechaLocal(u.fechaHoraCreacion);
 
     const generoCatalogo = this.generos.find(g => g.id === u.genero?.id) || null;
     const puestoCatalogo = this.puestos.find(p => p.id === u.puestoDeTrabajo?.id) || null;
@@ -182,7 +184,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
   validarHoraDesayuno(hora: string): boolean {
     if (!hora || hora.trim() === '') {
       this.horaDesayunoError = '';
-      return true; 
+      return true;
     }
     const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
     if (!regex.test(hora)) {
@@ -200,7 +202,6 @@ export class UserPopupComponent implements OnInit, OnChanges {
       this.authUser.contrasena
     );
     const usuarios: any[] = Array.isArray(resultado) ? resultado : [];
-
     return usuarios.some((u: any) => {
       const mismoNick = u.nickUsuario?.trim().toLowerCase() === nick;
       const esElMismo = this.modo === 'UPDATE' && u.id === this.usuarioEntrada?.id;
@@ -260,7 +261,7 @@ export class UserPopupComponent implements OnInit, OnChanges {
         ...this.usuario,
         contrasena: contrasenaFinal,
         fechaHoraCreacion: this.modo === 'CREATE'
-          ? new Date().toISOString()
+          ? this.getFechaLocalISO()
           : this.usuarioEntrada?.fechaHoraCreacion,
         fechaNacimiento: this.usuario.fechaNacimiento || null,
         genero: this.usuario.genero ? { id: this.usuario.genero.id } : null,
@@ -278,7 +279,6 @@ export class UserPopupComponent implements OnInit, OnChanges {
           alert('Error al crear el usuario.'); return;
         }
         res = resultado;
-
         for (const dir of this.usuario.direcciones) {
           await this.guardarDireccion(dir, res.id, 'CREATE');
         }
@@ -323,7 +323,6 @@ export class UserPopupComponent implements OnInit, OnChanges {
       direccionPrincipal: dir.direccionPrincipal ? 1 : 0,
       usuario: { id: usuarioId }
     };
-
     if (operacion === 'CREATE') {
       await this.userService.crearDireccion(dirAEnviar as any, this.authUser.nickUsuario, this.authUser.contrasena);
     } else {

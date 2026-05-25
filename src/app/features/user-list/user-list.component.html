@@ -1,17 +1,13 @@
-<app-user-popup
-    *ngIf="modoPopup !== 'CLOSED' && adminLogged"
-    [authUser]="adminLogged"
-    [usuarioEntrada]="modoPopup === 'UPDATE' ? usuarioSeleccionado : null"
-    [modo]="modoPopup"
-    (cerrarPopUpOk)="onCerrarPopUpOk()"
-    (cerrarPopUpCancel)="onCerrarPopUpCancel()">
+<app-user-popup *ngIf="modoPopup !== 'CLOSED' && adminLogged" [authUser]="adminLogged"
+    [usuarioEntrada]="modoPopup === 'UPDATE' ? usuarioSeleccionado : null" [modo]="modoPopup"
+    (cerrarPopUpOk)="onCerrarPopUpOk()" (cerrarPopUpCancel)="onCerrarPopUpCancel()">
 </app-user-popup>
 
 <div class="user-list-container">
 
     <div class="header">
         <h2>LISTA DE USUARIOS</h2>
-        
+
     </div>
 
     <div class="button-container">
@@ -63,8 +59,7 @@
                     </td>
 
                     <td>
-                        {{ usuario.fechaHoraCreacion | date:'yyyy-MM-dd HH:mm' }}
-                    </td>
+                        {{ formatearFecha(usuario.fechaHoraCreacion) }} </td>
 
                     <td>
                         {{ usuario.horaDesayuno }}

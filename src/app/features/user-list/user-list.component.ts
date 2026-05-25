@@ -171,4 +171,15 @@ obtenerContadorDireccionesExtra(usuario: any): number {
   const tienePrincipal = usuario.direcciones.some((d: any) => d.direccionPrincipal == 1);
   return Math.max(0, usuario.direcciones.length - (tienePrincipal ? 1 : 0));
 }
+
+formatearFecha(fecha: any): string {
+  if (!fecha) return '';
+  const partes = fecha.toString().replace('T', '-').replace(/:/g, '-').split('-');
+  const year = partes[0];
+  const month = partes[1];
+  const day = partes[2];
+  const hour = partes[3] || '00';
+  const min = partes[4] || '00';
+  return `${year}-${month}-${day} ${hour}:${min}`;
+}
 }
