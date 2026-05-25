@@ -1,0 +1,51 @@
+<div class="overlay"></div>
+
+<div class="popup-box">
+  <h3>Gestionar Puestos de Trabajo</h3>
+
+  <div class="crear-section">
+    <input type="text" [(ngModel)]="nuevoNombre" placeholder="Nuevo puesto..." />
+    <button (click)="crear()">Añadir</button>
+  </div>
+
+  @if (errorMsg) {
+    <p class="error-msg">{{ errorMsg }}</p>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (puesto of puestos; track puesto.id) {
+        <tr>
+          <td>{{ puesto.id }}</td>
+          <td>
+            @if (editandoId === puesto.id) {
+              <input type="text" [(ngModel)]="editandoNombre" />
+            } @else {
+              {{ puesto.nombre }}
+            }
+          </td>
+          <td class="acciones">
+            @if (editandoId === puesto.id) {
+              <button class="btn-guardar" (click)="actualizar()">Guardar</button>
+              <button class="btn-cancelar" (click)="cancelarEdicion()">Cancelar</button>
+            } @else {
+              <button class="btn-editar" (click)="activarEdicion(puesto)">Editar</button>
+              <button class="btn-borrar" (click)="eliminar(puesto.id)">Borrar</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <button class="btn-cerrar" (click)="cerrar.emit()">Cerrar</button>
+  </div>
+</div>

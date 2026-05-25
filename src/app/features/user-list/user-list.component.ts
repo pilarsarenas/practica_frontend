@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,6 @@ import { UserService } from 'src/app/core/services/user.service';
   imports: [
     CommonModule,
     UserPopupComponent,
-    DatePipe
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']

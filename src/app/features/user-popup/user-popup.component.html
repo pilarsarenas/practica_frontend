@@ -8,78 +8,157 @@
         </div>
 
         <div class="form-grid">
+
             <div class="form-field">
                 <label>Nombre de usuario</label>
-                <input type="text" [(ngModel)]="usuario.nickUsuario" [class.input-error]="nickError"
-                    (ngModelChange)="validarNick($event)" />
+                <input type="text"
+                       [(ngModel)]="usuario.nickUsuario"
+                       [class.input-error]="nickError"
+                       (ngModelChange)="validarNick($event)" />
                 <span class="error-msg" *ngIf="nickError">{{ nickError }}</span>
             </div>
+
             <div class="form-field">
                 <label>Contraseña</label>
-                <input type="password" [(ngModel)]="usuario.contrasena" [class.input-error]="passwordError"
-                    (ngModelChange)="validarContrasena($event)" />
+                <input type="password"
+                       [(ngModel)]="usuario.contrasena"
+                       [class.input-error]="passwordError"
+                       (ngModelChange)="validarContrasena($event)" />
+
                 <span class="error-msg" *ngIf="passwordError">{{ passwordError }}</span>
+
                 <span class="hint-msg" *ngIf="modo === 'UPDATE'">
                     Deja vacío para mantener la contraseña actual
                 </span>
-
             </div>
+
             <div class="form-field">
                 <label>Fecha de creación</label>
                 <input type="text" [value]="usuario.fechaHoraCreacion" disabled />
             </div>
+
             <div class="form-field">
                 <label>Nombre</label>
                 <input type="text" [(ngModel)]="usuario.nombre" />
             </div>
+
             <div class="form-field">
                 <label>Primer Apellido</label>
                 <input type="text" [(ngModel)]="usuario.primerApellido" />
             </div>
+
             <div class="form-field">
                 <label>Segundo Apellido</label>
                 <input type="text" [(ngModel)]="usuario.segundoApellido" />
             </div>
+
             <div class="form-field">
                 <label>Fecha de Cumpleaños</label>
                 <input type="date" [(ngModel)]="usuario.fechaNacimiento" />
             </div>
+
             <div class="form-field">
                 <label>Género</label>
-                <select [(ngModel)]="usuario.genero" [compareWith]="compareObjects" name="genero">
-                    <option [ngValue]="null">Seleccione...</option>
-                    <option *ngFor="let g of generos" [ngValue]="g">{{ g.nombre }}</option>
-                </select>
+
+                <div class="field-with-button">
+
+                    <select [(ngModel)]="usuario.genero"
+                            [compareWith]="compareObjects"
+                            name="genero">
+
+                        <option [ngValue]="null">Seleccione...</option>
+
+                        <option *ngFor="let g of generos"
+                                [ngValue]="g">
+                            {{ g.nombre }}
+                        </option>
+
+                    </select>
+
+                    <button type="button"
+                            class="btn-gestionar"
+                            (click)="abrirGeneroPopup()">
+                        Gestionar
+                    </button>
+
+                </div>
             </div>
+
             <div class="form-field">
                 <label>Puesto de Trabajo</label>
-                <select [(ngModel)]="usuario.puestoDeTrabajo" [compareWith]="compareObjects" name="puesto">
-                    <option [ngValue]="null">Seleccione...</option>
-                    <option *ngFor="let p of puestos" [ngValue]="p">{{ p.nombre }}</option>
-                </select>
+
+                <div class="field-with-button">
+
+                    <select [(ngModel)]="usuario.puestoDeTrabajo"
+                            [compareWith]="compareObjects"
+                            name="puesto">
+
+                        <option [ngValue]="null">Seleccione...</option>
+
+                        <option *ngFor="let p of puestos"
+                                [ngValue]="p">
+                            {{ p.nombre }}
+                        </option>
+
+                    </select>
+
+                    <button type="button"
+                            class="btn-gestionar"
+                            (click)="abrirPuestoPopup()">
+                        Gestionar
+                    </button>
+
+                </div>
             </div>
 
             <div class="form-field">
                 <label>Hora de desayuno</label>
-                <input type="time" [(ngModel)]="usuario.horaDesayuno" [class.input-error]="horaDesayunoError"
-                    (ngModelChange)="validarHoraDesayuno($event)" />
-                <span class="error-msg" *ngIf="horaDesayunoError">{{ horaDesayunoError }}</span>
+
+                <input type="time"
+                       [(ngModel)]="usuario.horaDesayuno"
+                       [class.input-error]="horaDesayunoError"
+                       (ngModelChange)="validarHoraDesayuno($event)" />
+
+                <span class="error-msg" *ngIf="horaDesayunoError">
+                    {{ horaDesayunoError }}
+                </span>
             </div>
+
         </div>
 
         <div class="addresses-section">
+
             <h3>Direcciones</h3>
+
             <div class="address-buttons">
-                <button type="button" (click)="addAddress()">Crear</button>
-                <button type="button" (click)="updateAddress()"
-                    [disabled]="selectedRowIndex === null">Actualizar</button>
-                <button type="button" class="main-button delete-btn" (click)="deleteAddress()">
-                    <img src="assets/images/DeleteIcon.JPG" class="trash-icon" alt="borrar" />
+
+                <button type="button" (click)="addAddress()">
+                    Crear
+                </button>
+
+                <button type="button"
+                        (click)="updateAddress()"
+                        [disabled]="selectedRowIndex === null">
+                    Actualizar
+                </button>
+
+                <button type="button"
+                        class="main-button delete-btn"
+                        (click)="deleteAddress()">
+
+                    <img src="assets/images/DeleteIcon.JPG"
+                         class="trash-icon"
+                         alt="borrar" />
+
                     Borrar
                 </button>
+
             </div>
+
             <div class="table-wrapper">
+
                 <table>
+
                     <thead>
                         <tr>
                             <th>Seleccionar</th>
@@ -88,28 +167,76 @@
                             <th>Número</th>
                         </tr>
                     </thead>
+
                     <tbody>
+
                         <tr *ngFor="let addr of usuario.direcciones; let i = index">
+
                             <td>
-                                <input type="radio" name="selectedRow" [checked]="selectedRowIndex === i"
-                                    (change)="selectedRowIndex = i" />
+                                <input type="radio"
+                                       name="selectedRow"
+                                       [checked]="selectedRowIndex === i"
+                                       (change)="selectedRowIndex = i" />
                             </td>
+
                             <td>
-                                <input type="radio" name="mainAddress" [checked]="addr.direccionPrincipal == 1"
-                                    (change)="setMainAddress(i)" />
+                                <input type="radio"
+                                       name="mainAddress"
+                                       [checked]="addr.direccionPrincipal == 1"
+                                       (change)="setMainAddress(i)" />
                             </td>
-                            <td><input type="text" [(ngModel)]="addr.nombreCalle" /></td>
-                            <td><input type="number" [(ngModel)]="addr.numeroCalle" /></td>
+
+                            <td>
+                                <input type="text"
+                                       [(ngModel)]="addr.nombreCalle" />
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                       [(ngModel)]="addr.numeroCalle" />
+                            </td>
+
                         </tr>
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
 
         <div class="footer-buttons">
-            <button type="button" (click)="onSave()">Guardar</button>
-            <button type="button" (click)="onCancel()">Cancelar</button>
+
+            <button type="button" (click)="onSave()">
+                Guardar
+            </button>
+
+            <button type="button" (click)="onCancel()">
+                Cancelar
+            </button>
+
         </div>
 
     </div>
 </div>
+
+@if (mostrarGeneroPopup) {
+
+    <app-genero-popup
+        [authUser]="authUser"
+        (cerrar)="cerrarGeneroPopup()">
+
+    </app-genero-popup>
+
+}
+
+@if (mostrarPuestoPopup) {
+
+    <app-puesto-popup
+        [authUser]="authUser"
+        (cerrar)="cerrarPuestoPopup()">
+
+    </app-puesto-popup>
+
+}

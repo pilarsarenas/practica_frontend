@@ -207,3 +207,28 @@ input[type="radio"] {
   overflow-y: auto;
   padding-right: 8px;
 }
+
+.field-with-button {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.field-with-button select {
+  flex: 1;
+}
+
+.btn-gestionar {
+  padding: 0.4rem 0.8rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+.btn-gestionar:hover {
+  background-color: #5a6268;
+}

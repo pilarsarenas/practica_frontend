@@ -1,0 +1,51 @@
+<div class="overlay"></div>
+
+<div class="popup-box">
+  <h3>Gestionar Géneros</h3>
+
+  <div class="crear-section">
+    <input type="text" [(ngModel)]="nuevoNombre" placeholder="Nuevo género..." />
+    <button (click)="crear()">Añadir</button>
+  </div>
+
+  @if (errorMsg) {
+    <p class="error-msg">{{ errorMsg }}</p>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (genero of generos; track genero.id) {
+        <tr>
+          <td>{{ genero.id }}</td>
+          <td>
+            @if (editandoId === genero.id) {
+              <input type="text" [(ngModel)]="editandoNombre" />
+            } @else {
+              {{ genero.nombre }}
+            }
+          </td>
+          <td class="acciones">
+            @if (editandoId === genero.id) {
+              <button class="btn-guardar" (click)="actualizar()">Guardar</button>
+              <button class="btn-cancelar" (click)="cancelarEdicion()">Cancelar</button>
+            } @else {
+              <button class="btn-editar" (click)="activarEdicion(genero)">Editar</button>
+              <button class="btn-borrar" (click)="eliminar(genero.id)">Borrar</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <button class="btn-cerrar" (click)="cerrar.emit()">Cerrar</button>
+  </div>
+</div>

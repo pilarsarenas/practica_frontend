@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { UserService } from 'src/app/core/services/user.service';
-
+import { GeneroPopupComponent } from '../genero-popup/genero-popup.component';
+import { PuestoPopupComponent } from '../puesto-trabajo-popup/puesto-trabajo-popup.component';
 @Component({
   selector: 'app-user-popup',
   templateUrl: './user-popup.component.html',
   styleUrls: ['./user-popup.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+imports: [CommonModule, FormsModule, GeneroPopupComponent, PuestoPopupComponent]
 })
 export class UserPopupComponent implements OnInit, OnChanges {
 
@@ -42,6 +43,9 @@ export class UserPopupComponent implements OnInit, OnChanges {
   generos: any[] = [];
   puestos: any[] = [];
   catalogsLoaded = false;
+
+  mostrarGeneroPopup: boolean = false;
+mostrarPuestoPopup: boolean = false;
 
   constructor(private userService: UserService) {}
 
@@ -181,19 +185,19 @@ export class UserPopupComponent implements OnInit, OnChanges {
     return true;
   }
 
-  validarHoraDesayuno(hora: string): boolean {
-    if (!hora || hora.trim() === '') {
-      this.horaDesayunoError = '';
-      return true;
-    }
-    const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-    if (!regex.test(hora)) {
-      this.horaDesayunoError = 'La hora debe tener el formato HH:MM (ej: 08:30).';
-      return false;
-    }
+validarHoraDesayuno(hora: string): boolean {
+  if (!hora || hora.trim() === '') {
     this.horaDesayunoError = '';
     return true;
   }
+  const regex = /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/;
+  if (!regex.test(hora)) {
+    this.horaDesayunoError = 'La hora debe tener el formato HH:MM (ej: 08:30).';
+    return false;
+  }
+  this.horaDesayunoError = '';
+  return true;
+}
 
   async nickEstaRepetido(): Promise<boolean> {
     const nick = this.usuario.nickUsuario?.trim().toLowerCase();
@@ -355,4 +359,22 @@ export class UserPopupComponent implements OnInit, OnChanges {
     const addr = this.usuario.direcciones[this.selectedRowIndex];
     if (!addr) return;
   }
+
+  abrirGeneroPopup() {
+  this.mostrarGeneroPopup = true;
+}
+
+cerrarGeneroPopup() {
+  this.mostrarGeneroPopup = false;
+  this.loadGeneros(); 
+}
+
+abrirPuestoPopup() {
+  this.mostrarPuestoPopup = true;
+}
+
+cerrarPuestoPopup() {
+  this.mostrarPuestoPopup = false;
+  this.loadPuestos();
+}
 }
