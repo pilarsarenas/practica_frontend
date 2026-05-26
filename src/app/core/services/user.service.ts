@@ -72,7 +72,11 @@ export class UserService {
 
 
   async obtenerPuestosDeTrabajo(nickUsuario: string, nickContrasena: string) {
-    return await to(this.http.get<PuestoDeTrabajo[]>(`${this.apiUrl}/puestosdetrabajo`, { params: { nickUsuario, nickContrasena } }).toPromise());
+    return await to(this.http.get<PuestoDeTrabajo[]>
+      (`${this.apiUrl}/puestosdetrabajo`,
+        { params: { nickUsuario, nickContrasena } }
+
+      ).toPromise());
   }
 
   async crearPuestoDeTrabajo(puesto: any, nickUsuario: string, nickContrasena: string) {
